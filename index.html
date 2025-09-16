@@ -92,7 +92,7 @@
       <div class="header">
         <div class="logo-column">
           <!-- Ruta relativa (colocar el archivo en /img/logo-para-VPN.png) -->
-          <img class="logo-img" src="logo-para-VPN.png" alt="" crossorigin="anonymous">
+          <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
         </div>
         <div class="title-column">
           <div class="title-main">Seguridad Informática</div>
@@ -159,62 +159,41 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
   <script>
-    // Descargar PDF (sin 2da página)
-    document.getElementById('btnPdf').addEventListener('click', async () => {
+    // Pre-carga del logo con fallback si no existe
+    (function(){
+      const target = document.querySelector('.logo-img');
+      if(!target) return;
+      const test = new Image();
+      test.crossOrigin = 'anonymous';
+      test.onload = () => { target.src = test.src; };
+      test.onerror = () => { console.warn('Logo no encontrado, se oculta en pantalla y en PDF'); target.style.display = 'none'; };
+      // Mantené la misma ruta que en el src del <img>
+      test.src = target.getAttribute('src');
+    })();
+
+    // Descargar PDF (versión simple, robusta)
+    document.getElementById('btnPdf').addEventListener('click', () => {
       const el = document.getElementById('documento');
-      const logo = document.querySelector('.logo-img');
-
-      // Esperar a que cargue la imagen (evita errores de html2canvas en GH Pages)
-      try {
-        if (logo && !logo.complete) {
-          await new Promise((resolve, reject) => {
-            logo.onload = resolve;
-            logo.onerror = () => { console.warn('Logo no cargó, se omite en el PDF'); resolve(); };
-          });
-        }
-      } catch(_) {}
-
       const opt = {
         margin: 0,
         filename: 'Solicitud_Alta_VPN.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          imageTimeout: 15000,
-          onclone: (doc) => {
-            // Si el logo falló, ocultarlo para no romper la exportación
-            const lg = doc.querySelector('.logo-img');
-            if (lg && lg.naturalWidth === 0) lg.style.display = 'none';
-          }
-        },
+        html2canvas: { scale: 2, useCORS: true, imageTimeout: 15000 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all','css','legacy'] }
       };
-
       try {
-        await html2pdf().set(opt).from(el).save();
+        html2pdf().set(opt).from(el).save();
       } catch (e) {
         console.error('Error al generar PDF:', e);
-        alert('No pude generar el PDF. Revisá que el logo exista en /img/logo-para-VPN.png o probá nuevamente.');
+        alert('No pude generar el PDF. Probá recargar la página.');
       }
     });
-      const opt = {
-        margin: 0,
-        filename: 'Solicitud_Alta_VPN.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all','css','legacy'] }
-      };
-      html2pdf().set(opt).from(el).save();
-    
 
     // Limpiar formulario
     document.getElementById('btnClear').addEventListener('click', () => {
       document.querySelectorAll('input, textarea').forEach(el => {
         if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-        else if (el.type === 'date') el.value = '';
         else el.value = '';
       });
     });
