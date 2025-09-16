@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -11,44 +11,46 @@
     * { box-sizing: border-box; }
     body { margin: 0; background: #f3f5f8; font-family: Inter, sans-serif; }
 
+    /* === Hoja A4 (ajustada para no desbordar en PDF) === */
     .sheet {
-      width: 210mm; min-height: 297mm; margin: 12mm auto; background: #fff; padding: 11mm;
-      border: 2px solid #1a1a1a; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      width: 210mm;
+      max-height: 297mm;            /* evita segunda hoja */
+      margin: 5mm auto;             /* margen externo menor */
+      padding: 8mm;                 /* margen interno menor */
+      background: #fff;
+      border: 2px solid #1a1a1a;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      overflow: hidden;             /* recorta cualquier fuga */
     }
 
-    .header-wrap { border: 1.6px solid #343a40; border-radius: 6px; overflow: hidden; }
-    .header { display: grid; grid-template-columns: 170px 1fr; align-items: center; }
-    .logo-column { border-right: 1.6px solid #343a40; padding: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .logo { height: 44px; border: 1.2px solid #343a40; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-    .title-column { text-align: center; padding: 16px 8px; }
-    .title-main { font-family: "Libre Franklin", Inter, sans-serif; font-weight: 700; font-size: 20px; }
+    /* === Encabezado === */
+    .header-wrap { border: 1.6px solid #343a40; border-radius: 6px; overflow: hidden; background:#f2f5f9; }
+    .header { display: grid; grid-template-columns: 200px 1fr; align-items: center; }
+    .logo-column { border-right: 1.6px solid #343a40; padding: 8px; display:flex; align-items:center; justify-content:center; }
+    .logo-img { max-height: 70px !important; width:auto; object-fit:contain; display:block; }
+    .title-column { text-align:center; padding: 16px 8px; }
+    .title-main { font-family: "Libre Franklin", Inter, sans-serif; font-weight: 700; font-size: 22px; }
     .title-sub { margin-top: 4px; font-weight: 600; font-size: 14px; }
 
+    /* === Cajas con barra de título === */
     .bar-box { margin-top: 8mm; border: 1.4px solid #343a40; border-radius: 6px; overflow: hidden; }
     .bar { display: grid; grid-template-columns: auto 1fr; }
     .bar-label { padding: 6px 10px; background: #e9eef6; font-weight: 700; border-right: 1.4px solid #343a40; }
     .bar-fill { background: #fff; }
 
+    /* === Tablas === */
     table.grid { width: 100% !important; border-collapse: collapse; border-spacing: 0; }
     table.grid th, table.grid td { border: 1px solid #343a40; padding: 6px 7px; font-size: 12.2px; }
     table.grid th { background: #f0f3f8; text-align: left; font-weight: 600; }
 
-    .input-line { width: 100%; border: none; border-bottom: 1px dashed #7e8790; padding: 2px 0; font: inherit; outline: none; }
-    input[type="date"] { width: 100%; border: none; font: inherit; }
+    /* Inputs como líneas */
+    .input-line { width: 100%; border: none; border-bottom: 1px dashed #7e8790; padding: 2px 0; font: inherit; outline: none; background: transparent; }
+    input[type="date"] { width: 100%; border: 1px solid #cfd6df; padding: 3px 6px; border-radius: 4px; font: inherit; }
 
-    .checks { 
-      padding: 10px; 
-      display: grid; 
-      gap: 6px; 
-    }
-    /* Solo clickeable el cuadrado */
-    .check { 
-      display: grid; 
-      grid-template-columns: 16px 1fr; 
-      gap: 8px; 
-      align-items: center; 
-      font-size: 12.2px; 
-    }
+    /* === Checkboxes: clic sólo en el cuadrado === */
+    .checks { padding: 10px; display: grid; gap: 6px; }
+    .check { display: grid; grid-template-columns: 16px 1fr; gap: 8px; align-items: center; }
     .check input.cb {
       appearance: none;
       width: 14px; height: 14px; margin: 0; cursor: pointer;
@@ -56,45 +58,32 @@
     }
     .check input.cb:checked { background: #0067c6; }
 
-    /* Forzar ancho completo de tablas/textarea en GH Pages */
-    table.grid { width: 100% !important; border-collapse: collapse; }
-    table.grid.notes { width: 100% !important; table-layout: fixed; }
-    table.grid.notes th { width: 100%; }
-    textarea {
-    width: 100%;
-    display: block;
-    border: none !important;       /* saca todos los bordes */
-    outline: none !important;
-    box-shadow: none !important;
-    border-top: 1px dashed #7e8790;/* línea superior tipo planilla */
-    padding: 6px 4px;
-    min-height: 22mm;              /* ajustá según quieras más o menos alto */
-    font: inherit;
-    resize: none;                  /* evita el redimensionado con el mouse */
-    overflow: hidden;              /* quita scroll en GH Pages */
-    }
-
-    @media print {
-      textarea {
-      min-height: 28mm !important; /* al convertir/impresión, más alto */
-    }
-    }
-
-    /* Reglas adicionales para la tabla de notas en GH Pages */
+    /* === Área de notas (GH Pages y PDF coherente) === */
     table.grid.notes { width: 100% !important; table-layout: fixed; }
     table.grid.notes th { width: 100%; }
     table.grid.notes td { padding: 0; }
+    textarea {
+      width: 100%; display:block; border: none !important; outline: none !important; box-shadow: none !important;
+      border-top: 1px dashed #7e8790; padding: 8px 6px; min-height: 22mm; font: inherit; resize: none; overflow: hidden;
+      background: transparent;
+    }
 
-    .toolbar { position: sticky; bottom: 0; display: flex; gap: 8px; justify-content: center; width: 210mm; margin: 0 auto; padding: 10px 0 18px; }
-    .btn { background: #0067c6; color: #fff; border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
+    /* === Barra de acciones === */
+    .toolbar { position: sticky; top: 0; z-index: 10; display:flex; gap:8px; justify-content:center; padding: 10px 0; background: transparent; }
+    .btn { background: #0067c6; color:#fff; border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; box-shadow:0 4px 16px rgba(0,103,198,.25); }
+    .btn.secondary { background:#6c757d; }
 
-    @media print { .toolbar { display: none !important; } }
+    /* === Print === */
+    @media print {
+      .toolbar { display: none !important; }
+      textarea { min-height: 28mm !important; }
+    }
   </style>
 </head>
 <body>
   <div class="toolbar">
     <button id="btnPdf" class="btn">Convertir a PDF</button>
-    <button id="btnClear" class="btn" style="background:#6c757d;">Limpiar Formulario</button>
+    <button id="btnClear" class="btn secondary">Limpiar Formulario</button>
   </div>
 
   <section id="documento" class="sheet">
@@ -102,8 +91,8 @@
     <div class="header-wrap">
       <div class="header">
         <div class="logo-column">
-          <div class="logo">Buenos Aires Ciudad</div>
-          <div class="logo">BA</div>
+          <!-- Ruta relativa (colocar el archivo en /img/logo-para-VPN.png) -->
+          <img class="logo-img" src="img/logo-para-VPN.png" alt="" crossorigin="anonymous">
         </div>
         <div class="title-column">
           <div class="title-main">Seguridad Informática</div>
@@ -114,14 +103,11 @@
 
     <!-- Solicitud de alta de VPN -->
     <div class="bar-box">
-      <div class="bar">
-        <div class="bar-label">SOLICITUD DE ALTA DE VPN</div>
-        <div class="bar-fill"></div>
-      </div>
+      <div class="bar"><div class="bar-label">SOLICITUD DE ALTA DE VPN</div><div class="bar-fill"></div></div>
       <table class="grid">
         <tr>
           <th>Fecha de Solicitud:</th>
-          <td><input type="date"></td>
+          <td><input type="date" placeholder="dd/mm/aaaa"></td>
           <th>Referido a CCOO:</th>
           <td><input class="input-line" type="text"></td>
         </tr>
@@ -130,65 +116,24 @@
 
     <!-- Datos del solicitante -->
     <div class="bar-box">
-      <div class="bar">
-        <div class="bar-label">DATOS DEL SOLICITANTE</div>
-        <div class="bar-fill"></div>
-      </div>
+      <div class="bar"><div class="bar-label">DATOS DEL SOLICITANTE</div><div class="bar-fill"></div></div>
       <table class="grid">
-        <tr>
-          <th>Apellido y Nombre</th>
-          <td colspan="3"><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>Usuario de Dominio</th>
-          <td><input class="input-line" type="text"></td>
-          <th>Nº de CUIL</th>
-          <td><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>Cargo</th>
-          <td><input class="input-line" type="text"></td>
-          <th>LP Nº</th>
-          <td><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>División / Departamento</th>
-          <td colspan="3"><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>Dependencia</th>
-          <td colspan="3"><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>Calle</th>
-          <td><input class="input-line" type="text"></td>
-          <th>Nº</th>
-          <td><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>E‑Mail</th>
-          <td><input class="input-line" type="email"></td>
-          <th>Teléfono / Interno</th>
-          <td><input class="input-line" type="text"></td>
-        </tr>
+        <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
+        <tr><th>Usuario de Dominio</th><td><input class="input-line" type="text"></td><th>Nº de CUIL</th><td><input class="input-line" type="text"></td></tr>
+        <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP Nº</th><td><input class="input-line" type="text"></td></tr>
+        <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
+        <tr><th>Dependencia</th><td colspan="3"><input class="input-line" type="text"></td></tr>
+        <tr><th>Calle</th><td><input class="input-line" type="text"></td><th>Nº</th><td><input class="input-line" type="text"></td></tr>
+        <tr><th>E‑Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="text"></td></tr>
       </table>
     </div>
 
     <!-- Sistemas/Servidores -->
     <div class="bar-box">
-      <div class="bar">
-        <div class="bar-label">SISTEMAS O SERVIDORES A LOS CUALES ACCEDERÁ A TRAVÉS DE LA VPN</div>
-        <div class="bar-fill"></div>
-      </div>
+      <div class="bar"><div class="bar-label">SISTEMAS O SERVIDORES A LOS CUALES ACCEDERÁ A TRAVÉS DE LA VPN</div><div class="bar-fill"></div></div>
       <div class="checks">
-        <div class="check">
-          <input class="cb" type="checkbox">
-          <span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span>
-        </div>
-        <div class="check">
-          <input class="cb" type="checkbox">
-          <span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span>
-        </div>
+        <div class="check"><input class="cb" type="checkbox"><span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span></div>
+        <div class="check"><input class="cb" type="checkbox"><span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span></div>
         <div class="check"><input class="cb" type="checkbox"><span>SISEP</span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Cámaras ULTRA‑IP</span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Carpeta Compartida</span></div>
@@ -202,56 +147,75 @@
 
     <!-- Responsable de la dependencia -->
     <div class="bar-box">
-      <div class="bar">
-        <div class="bar-label">RESPONSABLE DE LA DEPENDENCIA</div>
-        <div class="bar-fill"></div>
-      </div>
+      <div class="bar"><div class="bar-label">RESPONSABLE DE LA DEPENDENCIA</div><div class="bar-fill"></div></div>
       <table class="grid">
-        <tr>
-          <th>Apellido y Nombre</th>
-          <td colspan="3"><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>Cargo</th>
-          <td><input class="input-line" type="text"></td>
-          <th>LP</th>
-          <td><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>División / Departamento</th>
-          <td colspan="3"><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>E‑Mail</th>
-          <td><input class="input-line" type="email"></td>
-          <th>Teléfono / Interno</th>
-          <td><input class="input-line" type="text"></td>
-        </tr>
+        <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
+        <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP</th><td><input class="input-line" type="text"></td></tr>
+        <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
+        <tr><th>E‑Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="text"></td></tr>
       </table>
     </div>
   </section>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
   <script>
-    document.getElementById('btnPdf').addEventListener('click', () => {
+    // Descargar PDF (sin 2da página)
+    document.getElementById('btnPdf').addEventListener('click', async () => {
       const el = document.getElementById('documento');
+      const logo = document.querySelector('.logo-img');
+
+      // Esperar a que cargue la imagen (evita errores de html2canvas en GH Pages)
+      try {
+        if (logo && !logo.complete) {
+          await new Promise((resolve, reject) => {
+            logo.onload = resolve;
+            logo.onerror = () => { console.warn('Logo no cargó, se omite en el PDF'); resolve(); };
+          });
+        }
+      } catch(_) {}
+
+      const opt = {
+        margin: 0,
+        filename: 'Solicitud_Alta_VPN.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          imageTimeout: 15000,
+          onclone: (doc) => {
+            // Si el logo falló, ocultarlo para no romper la exportación
+            const lg = doc.querySelector('.logo-img');
+            if (lg && lg.naturalWidth === 0) lg.style.display = 'none';
+          }
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all','css','legacy'] }
+      };
+
+      try {
+        await html2pdf().set(opt).from(el).save();
+      } catch (e) {
+        console.error('Error al generar PDF:', e);
+        alert('No pude generar el PDF. Revisá que el logo exista en /img/logo-para-VPN.png o probá nuevamente.');
+      }
+    });
       const opt = {
         margin: 0,
         filename: 'Solicitud_Alta_VPN.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all','css','legacy'] }
       };
       html2pdf().set(opt).from(el).save();
     });
 
+    // Limpiar formulario
     document.getElementById('btnClear').addEventListener('click', () => {
       document.querySelectorAll('input, textarea').forEach(el => {
-        if(el.type === 'checkbox' || el.type === 'radio') {
-          el.checked = false;
-        } else {
-          el.value = '';
-        }
+        if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+        else if (el.type === 'date') el.value = '';
+        else el.value = '';
       });
     });
   </script>
