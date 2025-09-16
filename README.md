@@ -29,7 +29,7 @@
     .bar-label { padding: 6px 10px; background: #e9eef6; font-weight: 700; border-right: 1.4px solid #343a40; }
     .bar-fill { background: #fff; }
 
-    table.grid { width: 100%; border-collapse: collapse; }
+    table.grid { width: 100% !important; border-collapse: collapse; border-spacing: 0; }
     table.grid th, table.grid td { border: 1px solid #343a40; padding: 6px 7px; font-size: 12.2px; }
     table.grid th { background: #f0f3f8; text-align: left; font-weight: 600; }
 
@@ -62,13 +62,28 @@
     table.grid.notes th { width: 100%; }
     textarea {
       width: 100%;
-      border: none;
+      display: block;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
       border-top: 1px dashed #7e8790;
       padding: 8px 6px;
-      min-height: 25mm; /* reducido para que entre la sección siguiente */
+      min-height: 22mm;
       font: inherit;
       resize: none;
     }
+
+    @media print {
+      textarea {
+        min-height: 25mm !important; /* tamaño más grande solo en PDF */
+        resize: none !important;
+      }
+    }
+
+    /* Reglas adicionales para la tabla de notas en GH Pages */
+    table.grid.notes { width: 100% !important; table-layout: fixed; }
+    table.grid.notes th { width: 100%; }
+    table.grid.notes td { padding: 0; }
 
     .toolbar { position: sticky; bottom: 0; display: flex; gap: 8px; justify-content: center; width: 210mm; margin: 0 auto; padding: 10px 0 18px; }
     .btn { background: #0067c6; color: #fff; border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
@@ -242,6 +257,4 @@
   </script>
 </body>
 </html>
-
-
 
