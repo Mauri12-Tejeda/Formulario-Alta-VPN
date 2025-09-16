@@ -176,7 +176,7 @@
       <span>Otros</span>
     </label>
   </div>
-  <table class="grid">
+  <table class="grid notes">
     <tr><th>Detalle adicional (URLs / Servidores / Observaciones)</th></tr>
     <tr><td><textarea></textarea></td></tr>
   </table>
