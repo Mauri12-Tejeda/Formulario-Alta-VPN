@@ -1,5 +1,4 @@
 
-
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -37,22 +36,39 @@
     .input-line { width: 100%; border: none; border-bottom: 1px dashed #7e8790; padding: 2px 0; font: inherit; outline: none; }
     input[type="date"] { width: 100%; border: none; font: inherit; }
 
-    .check { position: relative; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-    .check input {
-      appearance: none;
-       width: 14px;
-       height: 14px;
-       border: 1.4px solid #343a40;
-       border-radius: 2px;
-       margin: 0;
-       cursor: pointer;
-      }
-    .check input:checked {
-      background-color: #0067c6;
+    .checks { 
+      padding: 10px; 
+      display: grid; 
+      gap: 6px; 
     }
+    /* Solo clickeable el cuadrado */
+    .check { 
+      display: grid; 
+      grid-template-columns: 16px 1fr; 
+      gap: 8px; 
+      align-items: center; 
+      font-size: 12.2px; 
+    }
+    .check input.cb {
+      appearance: none;
+      width: 14px; height: 14px; margin: 0; cursor: pointer;
+      border: 1.4px solid #343a40; border-radius: 2px; background: #fff;
+    }
+    .check input.cb:checked { background: #0067c6; }
 
-
-    textarea { width: 100%; border: none; border-top: 1px dashed #7e8790; padding: 8px 6px; min-height: 28mm; font: inherit; resize: none; }
+    /* Forzar ancho completo de tablas/textarea en GH Pages */
+    table.grid { width: 100% !important; border-collapse: collapse; }
+    table.grid.notes { width: 100% !important; table-layout: fixed; }
+    table.grid.notes th { width: 100%; }
+    textarea {
+      width: 100%;
+      border: none;
+      border-top: 1px dashed #7e8790;
+      padding: 8px 6px;
+      min-height: 25mm; /* reducido para que entre la sección siguiente */
+      font: inherit;
+      resize: none;
+    }
 
     .toolbar { position: sticky; bottom: 0; display: flex; gap: 8px; justify-content: center; width: 210mm; margin: 0 auto; padding: 10px 0 18px; }
     .btn { background: #0067c6; color: #fff; border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
@@ -144,44 +160,30 @@
     </div>
 
     <!-- Sistemas/Servidores -->
-   <!-- Sistemas/Servidores -->
-<div class="bar-box">
-  <div class="bar">
-    <div class="bar-label">SISTEMAS O SERVIDORES A LOS CUALES ACCEDERÁ A TRAVÉS DE LA VPN</div>
-    <div class="bar-fill"></div>
-  </div>
-  <div class="checks">
-    <label class="check">
-      <input type="checkbox"><span class="box"></span>
-      <span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span>
-    </label>
-    <label class="check">
-      <input type="checkbox"><span class="box"></span>
-      <span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span>
-    </label>
-    <label class="check">
-      <input type="checkbox"><span class="box"></span>
-      <span>SISEP</span>
-    </label>
-    <label class="check">
-      <input type="checkbox"><span class="box"></span>
-      <span>Cámaras ULTRA-IP</span>
-    </label>
-    <label class="check">
-      <input type="checkbox"><span class="box"></span>
-      <span>Carpeta Compartida</span>
-    </label>
-    <label class="check">
-      <input type="checkbox"><span class="box"></span>
-      <span>Otros</span>
-    </label>
-  </div>
-  <table class="grid notes">
-    <tr><th>Detalle adicional (URLs / Servidores / Observaciones)</th></tr>
-    <tr><td><textarea></textarea></td></tr>
-  </table>
-</div>
-
+    <div class="bar-box">
+      <div class="bar">
+        <div class="bar-label">SISTEMAS O SERVIDORES A LOS CUALES ACCEDERÁ A TRAVÉS DE LA VPN</div>
+        <div class="bar-fill"></div>
+      </div>
+      <div class="checks">
+        <div class="check">
+          <input class="cb" type="checkbox">
+          <span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span>
+        </div>
+        <div class="check">
+          <input class="cb" type="checkbox">
+          <span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span>
+        </div>
+        <div class="check"><input class="cb" type="checkbox"><span>SISEP</span></div>
+        <div class="check"><input class="cb" type="checkbox"><span>Cámaras ULTRA‑IP</span></div>
+        <div class="check"><input class="cb" type="checkbox"><span>Carpeta Compartida</span></div>
+        <div class="check"><input class="cb" type="checkbox"><span>Otros</span></div>
+      </div>
+      <table class="grid notes">
+        <tr><th>Detalle adicional (URLs / Servidores / Observaciones)</th></tr>
+        <tr><td><textarea></textarea></td></tr>
+      </table>
+    </div>
 
     <!-- Responsable de la dependencia -->
     <div class="bar-box">
@@ -240,3 +242,6 @@
   </script>
 </body>
 </html>
+
+
+
