@@ -4,80 +4,81 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Solicitud de Alta de VPN</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Franklin:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #f3f5f8; font-family: Inter, sans-serif; }
 
-    /* === Hoja A4 (ajustada para no desbordar en PDF) === */
-    .sheet {
-      width: 210mm;
-      max-height: 297mm;            /* evita segunda hoja */
-      margin: 5mm auto;             /* margen externo menor */
-      padding: 8mm;                 /* margen interno menor */
-      background: #fff;
-      border: 2px solid #1a1a1a;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.12);
-      overflow: hidden;             /* recorta cualquier fuga */
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f3f5f8;font-family:Inter,sans-serif}
+
+    /* ===== Hoja A4 ===== */
+    .sheet{
+      width:210mm;
+      padding:8mm;
+      background:#fff;
+      border:2px solid #1a1a1a;
+      box-shadow: none; border-radius: 0; 
+
+      margin:5mm auto;           /* sólo para pantalla */
+      overflow:hidden;
+      page-break-inside:avoid;
     }
 
-    /* === Encabezado === */
-    .header-wrap { border: 1.6px solid #343a40; border-radius: 6px; overflow: hidden; background:#f2f5f9; }
-    .header { display: grid; grid-template-columns: 200px 1fr; align-items: center; }
-    .logo-column { border-right: 1.6px solid #343a40; padding: 8px; display:flex; align-items:center; justify-content:center; }
-    .logo-img { max-height: 70px !important; width:auto; object-fit:contain; display:block; }
-    .title-column { text-align:center; padding: 16px 8px; }
-    .title-main { font-family: "Libre Franklin", Inter, sans-serif; font-weight: 700; font-size: 22px; }
-    .title-sub { margin-top: 4px; font-weight: 600; font-size: 14px; }
+    /* ===== Encabezado ===== */
+    .header-wrap{border:1.6px solid #343a40;border-radius:6px;overflow:hidden;background:#f2f5f9}
+    .header{display:grid;grid-template-columns:200px 1fr;align-items:center}
+    .logo-column{border-right:1.6px solid #343a40;padding:8px;display:flex;align-items:center;justify-content:center}
+    .logo-img{max-height:70px;width:auto;object-fit:contain;display:block}
+    .title-column{text-align:center;padding:16px 8px}
+    .title-main{font-family:"Libre Franklin",Inter,sans-serif;font-weight:700;font-size:22px}
+    .title-sub{margin-top:4px;font-weight:600;font-size:14px}
 
-    /* === Cajas con barra de título === */
-    .bar-box { margin-top: 8mm; border: 1.4px solid #343a40; border-radius: 6px; overflow: hidden; }
-    .bar { display: grid; grid-template-columns: auto 1fr; }
-    .bar-label { padding: 6px 10px; background: #e9eef6; font-weight: 700; border-right: 1.4px solid #343a40; }
-    .bar-fill { background: #fff; }
+    /* ===== Cajas con barra de título ===== */
+    .bar-box{margin-top:6mm;border:1.4px solid #343a40;border-radius:6px;overflow:hidden}
+    .bar{display:grid;grid-template-columns:auto 1fr}
+    .bar-label{padding:6px 10px;background:#e9eef6;font-weight:700;border-right:1.4px solid #343a40}
+    .bar-fill{background:#fff}
 
-    /* === Tablas === */
-    table.grid { width: 100% !important; border-collapse: collapse; border-spacing: 0; }
-    table.grid th, table.grid td { border: 1px solid #343a40; padding: 6px 7px; font-size: 12.2px; }
-    table.grid th { background: #f0f3f8; text-align: left; font-weight: 600; }
+    /* ===== Tablas ===== */
+    table.grid{width:100%;border-collapse:collapse;border-spacing:0}
+    table.grid th,table.grid td{border:1px solid #343a40;padding:6px 7px;font-size:12.2px}
+    table.grid th{background:#f0f3f8;text-align:left;font-weight:600}
 
     /* Inputs como líneas */
-    .input-line { width: 100%; border: none; border-bottom: 1px dashed #7e8790; padding: 2px 0; font: inherit; outline: none; background: transparent; }
-    input[type="date"] { width: 100%; border: 1px solid #cfd6df; padding: 3px 6px; border-radius: 4px; font: inherit; }
+    .input-line{width:100%;border:none;border-bottom:1px dashed #7e8790;padding:2px 0;font:inherit;outline:none;background:transparent}
+    input[type="date"]{width:100%;border:1px solid #cfd6df;padding:3px 6px;border-radius:4px;font:inherit}
 
-    /* === Checkboxes: clic sólo en el cuadrado === */
-    .checks { padding: 10px; display: grid; gap: 6px; }
-    .check { display: grid; grid-template-columns: 16px 1fr; gap: 8px; align-items: center; }
-    .check input.cb {
-      appearance: none;
-      width: 14px; height: 14px; margin: 0; cursor: pointer;
-      border: 1.4px solid #343a40; border-radius: 2px; background: #fff;
-    }
-    .check input.cb:checked { background: #0067c6; }
+    /* ===== Checkboxes: clic solo en el cuadrito ===== */
+    .checks{padding:10px;display:grid;gap:6px}
+    .check{display:grid;grid-template-columns:16px 1fr;gap:8px;align-items:center}
+    .check input.cb{appearance:none;width:14px;height:14px;margin:0;cursor:pointer;border:1.4px solid #343a40;border-radius:2px;background:#fff}
+    .check input.cb:checked{background:#0067c6}
 
-    /* === Área de notas (GH Pages y PDF coherente) === */
-    table.grid.notes { width: 100% !important; table-layout: fixed; }
-    table.grid.notes th { width: 100%; }
-    table.grid.notes td { padding: 0; }
-    textarea {
-      width: 100%; display:block; border: none !important; outline: none !important; box-shadow: none !important;
-      border-top: 1px dashed #7e8790; padding: 8px 6px; min-height: 22mm; font: inherit; resize: none; overflow: hidden;
-      background: transparent;
-    }
+    /* ===== Aviso importante (pie hoja 1) ===== */
+    .notice{margin-top:4mm;border:1px solid #000;border-radius:4px;padding:0 4mm 3mm}
+    .notice-head{background:#000;color:#fff;text-align:center;font-weight:700;padding:3mm 2mm;margin:-1px -1px 3mm -1px;border-radius:4px 4px 0 0;font-size:12.5px;letter-spacing:.3px}
+    .notice-list{margin:0 0 0 18px;padding:0;font-size:12px}
+    .notice-list li{margin:2mm 0;line-height:1.35}
+    .notice a{color:#0a58ca;text-decoration:underline}
 
-    /* === Barra de acciones === */
-    .toolbar { position: sticky; top: 0; z-index: 10; display:flex; gap:8px; justify-content:center; padding: 10px 0; background: transparent; }
-    .btn { background: #0067c6; color:#fff; border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; box-shadow:0 4px 16px rgba(0,103,198,.25); }
-    .btn.secondary { background:#6c757d; }
+    /* ===== Hoja 2 (Instructivo) ===== */
+    #instructivo{display:flex;flex-direction:column}
+    #instructivo .inst-body{flex:1;display:flex;flex-direction:column}
+    #instructivo .footbox{margin-top:auto}
+    .hlead{font-weight:700;text-transform:uppercase;font-size:13px;margin:10px 0 8px 0}
+    ol.inst{margin:6px 0 0 16px;padding:0 8px}
+    ol.inst li{margin:4px 0;line-height:1.35}
+    .note{font-size:11px;color:#222}
+    .footbox{border-top:2px solid #000;margin-top:10mm;padding-top:3mm;font-size:11px}
 
-    /* === Print === */
-    @media print {
-      .toolbar { display: none !important; }
-      textarea { min-height: 28mm !important; }
-    }
+    /* ===== Toolbar ===== */
+    .toolbar{position:sticky;top:0;z-index:10;display:flex;gap:8px;justify-content:center;padding:10px 0;background:transparent}
+    .btn{background:#0067c6;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,103,198,.25)}
+    .btn.secondary{background:#6c757d}
+
+    @media print{.toolbar{display:none!important}}
   </style>
 </head>
 <body>
@@ -86,12 +87,11 @@
     <button id="btnClear" class="btn secondary">Limpiar Formulario</button>
   </div>
 
+  <!-- ===== HOJA 1: FORMULARIO (SIN WRAPPER GLOBAL) ===== -->
   <section id="documento" class="sheet">
-    <!-- Encabezado principal -->
     <div class="header-wrap">
       <div class="header">
         <div class="logo-column">
-          <!-- Ruta relativa (colocar el archivo en /img/logo-para-VPN.png) -->
           <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
         </div>
         <div class="title-column">
@@ -101,7 +101,6 @@
       </div>
     </div>
 
-    <!-- Solicitud de alta de VPN -->
     <div class="bar-box">
       <div class="bar"><div class="bar-label">SOLICITUD DE ALTA DE VPN</div><div class="bar-fill"></div></div>
       <table class="grid">
@@ -114,87 +113,161 @@
       </table>
     </div>
 
-    <!-- Datos del solicitante -->
     <div class="bar-box">
       <div class="bar"><div class="bar-label">DATOS DEL SOLICITANTE</div><div class="bar-fill"></div></div>
       <table class="grid">
         <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>Usuario de Dominio</th><td><input class="input-line" type="text"></td><th>Nº de CUIL</th><td><input class="input-line" type="text"></td></tr>
-        <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP Nº</th><td><input class="input-line" type="text"></td></tr>
+        <tr><th>Usuario de Dominio</th><td><input class="input-line" type="text"></td><th>Nº de CUIL</th><td><input class="input-line"type="text" inputmode="numeric" maxlength="11"oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)">
+
+        <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP Nº</th><td><input class="input-line" type="number" min="0" step="1"></td>
         <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
         <tr><th>Dependencia</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>Calle</th><td><input class="input-line" type="text"></td><th>Nº</th><td><input class="input-line" type="text"></td></tr>
-        <tr><th>E‑Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="text"></td></tr>
+        <tr><th>Calle</th><td><input class="input-line" type="text"></td><th>Nº</th><td><input class="input-line" type="number" min="0" step="1"></td>
+        <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="15" pattern="\d{1,15}"></td>
+
       </table>
     </div>
 
-    <!-- Sistemas/Servidores -->
     <div class="bar-box">
       <div class="bar"><div class="bar-label">SISTEMAS O SERVIDORES A LOS CUALES ACCEDERÁ A TRAVÉS DE LA VPN</div><div class="bar-fill"></div></div>
       <div class="checks">
         <div class="check"><input class="cb" type="checkbox"><span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span></div>
         <div class="check"><input class="cb" type="checkbox"><span>SISEP</span></div>
-        <div class="check"><input class="cb" type="checkbox"><span>Cámaras ULTRA‑IP</span></div>
+        <div class="check"><input class="cb" type="checkbox"><span>Cámaras ULTRA-IP</span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Carpeta Compartida</span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Otros</span></div>
       </div>
-      <table class="grid notes">
-        <tr><th>Detalle adicional (URLs / Servidores / Observaciones)</th></tr>
-        <tr><td><textarea></textarea></td></tr>
-      </table>
     </div>
 
-    <!-- Responsable de la dependencia -->
     <div class="bar-box">
       <div class="bar"><div class="bar-label">RESPONSABLE DE LA DEPENDENCIA</div><div class="bar-fill"></div></div>
       <table class="grid">
         <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
         <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP</th><td><input class="input-line" type="text"></td></tr>
         <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>E‑Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="text"></td></tr>
+        <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td>
       </table>
+    </div>
+
+    <div class="notice">
+      <div class="notice-head">AVISO IMPORTANTE</div>
+      <ol class="notice-list">
+        <li>Al finalizar de completar el formulario, recuerde enviarlo vía CCOO a Jonatan PALUMBO (JPALUMBO).</li>
+        <li>Ante cualquier duda comuníquese vía mail a <a href="mailto:soportemjys@buenosaires.gob.ar">soportemjys@buenosaires.gob.ar</a> o al teléfono: 4309-9800 int 115151.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== HOJA 2: INSTRUCTIVO ===== -->
+  <section id="instructivo" class="sheet">
+    <div class="header-wrap">
+      <div class="header">
+        <div class="logo-column">
+          <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
+        </div>
+        <div class="title-column">
+          <div class="title-main">Seguridad Informática</div>
+          <div class="title-sub">Ministerio de Justicia y Seguridad - CABA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hlead">INSTRUCCIONES PARA LA CONFECCIÓN DEL FORMULARIO DE SOLICITUD DE VPN</div>
+
+    <div class="inst-body">
+      <ol class="inst">
+        <li>Los campos en <strong>rojo</strong> son obligatorios. De no completarse, se descartará el formulario.</li>
+        <li>Completar la <strong>Fecha de Requerimiento</strong>.</li>
+        <li>Indicar el <strong>Nº de CCOO</strong> de referencia. Ej.: <em>NO-2022-xxxxxxx-GCABA-SS</em>.</li>
+        <li>Nombre completo del solicitante.</li>
+        <li>Usuario de Dominio (usuario con el que ingresa a la PC de la dependencia).</li>
+        <li><strong>No se puede prestar ni compartir</strong> la cuenta de usuario.
+          <div class="note">Deberá solicitar el <strong>Área de Dominio</strong> al siguiente correo: <em>dominio.mjyseg@buenosaires.gob.ar</em></div>
+        </li>
+        <li>Indicar <strong>Nº de CUIL</strong> (sin guiones).</li>
+        <li>Indicar <strong>LP del Solicitante</strong> (Personal contratado no completa).</li>
+        <li>Indicar el <strong>e-mail</strong> del solicitante (<em>usuario@buenosaires.gob.ar</em>).
+          <div class="note">En caso de no poseer, <strong>realizar la solicitud</strong> correspondiente (ver Intranet).</div>
+        </li>
+        <li>Indicar <strong>Teléfono o Interno</strong>.</li>
+        <li>Indicar <strong>Sistemas o servidores</strong> a los cuales accederá por VPN.
+          <div class="note">Puede elegir varias opciones. Carpeta Compartida solo si posee acceso; si requiere nuevo acceso, solicitarlo al Área de Dominio: <em>dominio.mjyseg@buenosaires.gob.ar</em></div>
+        </li>
+      </ol>
+
+      <div class="footbox">
+        <strong>AVISO IMPORTANTE</strong>
+        <div class="note">
+          1. Al finalizar el completar, enviar escaneado vía CCOO a <em>JUAN P. PALMIERI</em> o <em>ALMIBES</em>.<br>
+          2. Ante consultas o asistencia: <em>seguridadinformatica@buenosaires.gob.ar</em>
+        </div>
+      </div>
     </div>
   </section>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
   <script>
-    // Pre-carga del logo con fallback si no existe
+    // Precarga del logo con fallback
     (function(){
-      const target = document.querySelector('.logo-img');
-      if(!target) return;
-      const test = new Image();
-      test.crossOrigin = 'anonymous';
-      test.onload = () => { target.src = test.src; };
-      test.onerror = () => { console.warn('Logo no encontrado, se oculta en pantalla y en PDF'); target.style.display = 'none'; };
-      // Mantené la misma ruta que en el src del <img>
-      test.src = target.getAttribute('src');
+      document.querySelectorAll('.logo-img').forEach(target=>{
+        const test=new Image();
+        test.crossOrigin='anonymous';
+        test.onload=()=>{ target.src=test.src; };
+        test.onerror=()=>{ console.warn('Logo no encontrado, se oculta'); target.style.display='none'; };
+        test.src=target.getAttribute('src');
+      });
     })();
 
-    // Descargar PDF (versión simple, robusta)
-    document.getElementById('btnPdf').addEventListener('click', () => {
-      const el = document.getElementById('documento');
+    // === PDF: capturar cada hoja por separado y unirlas ===
+    document.getElementById('btnPdf').addEventListener('click', async ()=>{
+      try{ await document.fonts.ready; }catch(_){}
+
+      const p1 = document.getElementById('documento');
+      const p2 = document.getElementById('instructivo');
+
       const opt = {
         margin: 0,
         filename: 'Solicitud_Alta_VPN.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, imageTimeout: 15000 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all','css','legacy'] }
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          imageTimeout: 15000,
+          letterRendering: true,
+          onclone: (doc)=>{
+            // Quitar sombras y radios para evitar “pegado visual”
+            doc.querySelectorAll('.sheet').forEach(s=>{
+              s.style.margin = '0 auto';
+              s.style.boxShadow = 'none';
+              s.style.borderRadius = '0';
+            });
+          }
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-      try {
-        html2pdf().set(opt).from(el).save();
-      } catch (e) {
-        console.error('Error al generar PDF:', e);
-        alert('No pude generar el PDF. Probá recargar la página.');
-      }
-    });
 
-    // Limpiar formulario
-    document.getElementById('btnClear').addEventListener('click', () => {
-      document.querySelectorAll('input, textarea').forEach(el => {
-        if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-        else el.value = '';
+      // 1) Primera hoja
+      let worker = html2pdf().set(opt).from(p1).toPdf();
+
+      // 2) Insertar nueva página y encadenar la segunda
+      worker.get('pdf').then(pdf => { pdf.addPage(); });
+
+      worker = worker
+        .from(p2)               // segunda hoja
+        .toContainer()
+        .toCanvas()
+        .toImg()
+        .toPdf()
+        .save();                // guarda el PDF resultante (2 páginas)
+    });
+    
+
+    // Limpiar formulario (sólo hoja 1)
+    document.getElementById('btnClear').addEventListener('click', ()=>{
+      document.querySelectorAll('#documento input, #documento textarea').forEach(el=>{
+        if (el.type==='checkbox' || el.type==='radio') el.checked=false;
+        else el.value='';
       });
     });
   </script>
