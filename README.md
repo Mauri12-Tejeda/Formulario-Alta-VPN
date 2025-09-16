@@ -61,23 +61,23 @@
     table.grid.notes { width: 100% !important; table-layout: fixed; }
     table.grid.notes th { width: 100%; }
     textarea {
-      width: 100%;
-      display: block;
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
-      border-top: 1px dashed #7e8790;
-      padding: 8px 6px;
-      min-height: 22mm;
-      font: inherit;
-      resize: none;
+    width: 100%;
+    display: block;
+    border: none !important;       /* saca todos los bordes */
+    outline: none !important;
+    box-shadow: none !important;
+    border-top: 1px dashed #7e8790;/* línea superior tipo planilla */
+    padding: 6px 4px;
+    min-height: 22mm;              /* ajustá según quieras más o menos alto */
+    font: inherit;
+    resize: none;                  /* evita el redimensionado con el mouse */
+    overflow: hidden;              /* quita scroll en GH Pages */
     }
 
     @media print {
       textarea {
-        min-height: 25mm !important; /* tamaño más grande solo en PDF */
-        resize: none !important;
-      }
+      min-height: 28mm !important; /* al convertir/impresión, más alto */
+    }
     }
 
     /* Reglas adicionales para la tabla de notas en GH Pages */
