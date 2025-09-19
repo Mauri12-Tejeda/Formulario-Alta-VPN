@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Solicitud de Alta de VPN</title>
+  <title>Solicitud de Alta de VPN – 3 Hojas</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,22 +11,9 @@
 
   <style>
     *{box-sizing:border-box}
-    body{margin:0;background:#f3f5f8;font-family:Inter,sans-serif}
+    body{margin:0;background:#f3f5f8;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
 
-    /* ===== Hoja A4 ===== */
-    .sheet{
-      width:210mm;
-      padding:8mm;
-      background:#fff;
-      border:2px solid #1a1a1a;
-      box-shadow: none; border-radius: 0; 
-
-      margin:5mm auto;           /* sólo para pantalla */
-      overflow:hidden;
-      page-break-inside:avoid;
-    }
-
-    /* ===== Encabezado ===== */
+    .sheet{width:210mm; padding:8mm; background:#fff; border:2px solid #1a1a1a; margin:5mm auto; overflow:hidden; page-break-inside:avoid;}
     .header-wrap{border:1.6px solid #343a40;border-radius:6px;overflow:hidden;background:#f2f5f9}
     .header{display:grid;grid-template-columns:200px 1fr;align-items:center}
     .logo-column{border-right:1.6px solid #343a40;padding:8px;display:flex;align-items:center;justify-content:center}
@@ -35,35 +22,33 @@
     .title-main{font-family:"Libre Franklin",Inter,sans-serif;font-weight:700;font-size:22px}
     .title-sub{margin-top:4px;font-weight:600;font-size:14px}
 
-    /* ===== Cajas con barra de título ===== */
     .bar-box{margin-top:6mm;border:1.4px solid #343a40;border-radius:6px;overflow:hidden}
     .bar{display:grid;grid-template-columns:auto 1fr}
     .bar-label{padding:6px 10px;background:#e9eef6;font-weight:700;border-right:1.4px solid #343a40}
     .bar-fill{background:#fff}
 
-    /* ===== Tablas ===== */
     table.grid{width:100%;border-collapse:collapse;border-spacing:0}
-    table.grid th,table.grid td{border:1px solid #343a40;padding:6px 7px;font-size:12.2px}
+    table.grid th,table.grid td{border:1px solid #343a40;padding:6px 7px;font-size:12.6px}
     table.grid th{background:#f0f3f8;text-align:left;font-weight:600}
 
-    /* Inputs como líneas */
     .input-line{width:100%;border:none;border-bottom:1px dashed #7e8790;padding:2px 0;font:inherit;outline:none;background:transparent}
-    input[type="date"]{width:100%;border:1px solid #cfd6df;padding:3px 6px;border-radius:4px;font:inherit}
+    input[type="date"], textarea{width:100%;border:1px solid #cfd6df;padding:6px 8px;border-radius:4px;font:inherit;resize:vertical}
 
-    /* ===== Checkboxes: clic solo en el cuadrito ===== */
-    .checks{padding:10px;display:grid;gap:6px}
+    .req{color:#c1121f;font-weight:700}
+    .invalid{outline:2px solid #c1121f !important; background:#fff2f2}
+
+    .checks{padding:10px;display:grid;gap:8px}
     .check{display:grid;grid-template-columns:16px 1fr;gap:8px;align-items:center}
     .check input.cb{appearance:none;width:14px;height:14px;margin:0;cursor:pointer;border:1.4px solid #343a40;border-radius:2px;background:#fff}
     .check input.cb:checked{background:#0067c6}
+    .hint{color:#444;font-size:12px}
 
-    /* ===== Aviso importante (pie hoja 1) ===== */
     .notice{margin-top:4mm;border:1px solid #000;border-radius:4px;padding:0 4mm 3mm}
     .notice-head{background:#000;color:#fff;text-align:center;font-weight:700;padding:3mm 2mm;margin:-1px -1px 3mm -1px;border-radius:4px 4px 0 0;font-size:12.5px;letter-spacing:.3px}
     .notice-list{margin:0 0 0 18px;padding:0;font-size:12px}
     .notice-list li{margin:2mm 0;line-height:1.35}
     .notice a{color:#0a58ca;text-decoration:underline}
 
-    /* ===== Hoja 2 (Instructivo) ===== */
     #instructivo{display:flex;flex-direction:column}
     #instructivo .inst-body{flex:1;display:flex;flex-direction:column}
     #instructivo .footbox{margin-top:auto}
@@ -73,7 +58,6 @@
     .note{font-size:11px;color:#222}
     .footbox{border-top:2px solid #000;margin-top:10mm;padding-top:3mm;font-size:11px}
 
-    /* ===== Toolbar ===== */
     .toolbar{position:sticky;top:0;z-index:10;display:flex;gap:8px;justify-content:center;padding:10px 0;background:transparent}
     .btn{background:#0067c6;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,103,198,.25)}
     .btn.secondary{background:#6c757d}
@@ -87,8 +71,8 @@
     <button id="btnClear" class="btn secondary">Limpiar Formulario</button>
   </div>
 
-  <!-- ===== HOJA 1: FORMULARIO (SIN WRAPPER GLOBAL) ===== -->
-  <section id="documento" class="sheet">
+  <!-- ===== HOJA 1 ===== -->
+  <section id="hoja1" class="sheet">
     <div class="header-wrap">
       <div class="header">
         <div class="logo-column">
@@ -102,13 +86,13 @@
     </div>
 
     <div class="bar-box">
-      <div class="bar"><div class="bar-label">SOLICITUD DE ALTA DE VPN</div><div class="bar-fill"></div></div>
+      <div class="bar"><div class="bar-label">DATOS DE LA SOLICITUD</div><div class="bar-fill"></div></div>
       <table class="grid">
         <tr>
-          <th>Fecha de Solicitud:</th>
+          <th>Fecha de Solicitud</th>
           <td><input type="date" placeholder="dd/mm/aaaa"></td>
-          <th>Referido a CCOO:</th>
-          <td><input class="input-line" type="text"></td>
+          <th>Referido a CCOO</th>
+          <td><input class="input-line" type="text" placeholder="NO-AAAA-xxxxx-GCABA-XX"></td>
         </tr>
       </table>
     </div>
@@ -116,27 +100,76 @@
     <div class="bar-box">
       <div class="bar"><div class="bar-label">DATOS DEL SOLICITANTE</div><div class="bar-fill"></div></div>
       <table class="grid">
-        <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>Usuario de Dominio</th><td><input class="input-line" type="text"></td><th>Nº de CUIL</th><td><input class="input-line"type="text" inputmode="numeric" maxlength="11"oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)">
-
-        <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP Nº</th><td><input class="input-line" type="number" min="0" step="1"></td>
-        <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>Dependencia</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>Calle</th><td><input class="input-line" type="text"></td><th>Nº</th><td><input class="input-line" type="number" min="0" step="1"></td>
-        <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="15" pattern="\d{1,15}"></td>
-
+        <tr>
+          <th><span class="req">Apellido y Nombre</span></th>
+          <td colspan="3"><input id="inpNombre" class="input-line" type="text" required pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[\s'][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)+$" title="Ingrese nombre y apellido (solo letras y espacios)"></td>
+        </tr>
+        <tr>
+          <th>Usuario de Dominio</th>
+          <td><input class="input-line" type="text"></td>
+          <th><span class="req">Nº de CUIL</span></th>
+          <td>
+            <input id="inpCuil" class="input-line" type="text" inputmode="numeric" maxlength="11" required
+                   oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)" pattern="^\d{11}$" title="11 dígitos sin guiones">
+          </td>
+        </tr>
+        <tr>
+          <th>Cargo</th>
+          <td><input class="input-line" type="text"></td>
+          <th>LP Nº</th>
+          <td><input class="input-line" type="number" min="0" step="1"></td>
+        </tr>
+        <tr>
+          <th>División / Departamento</th>
+          <td colspan="3"><input class="input-line" type="text"></td>
+        </tr>
+        <tr>
+          <th>Dependencia</th>
+          <td colspan="3"><input class="input-line" type="text"></td>
+        </tr>
+        <tr>
+          <th><span class="req">Calle</span></th>
+          <td><input id="inpCalle" class="input-line" type="text" required></td>
+          <th><span class="req">Nº</span></th>
+          <td><input id="inpNumero" class="input-line" type="number" min="0" step="1" required></td>
+        </tr>
+        <tr>
+          <th>E-Mail</th>
+          <td><input class="input-line" type="email" placeholder="usuario@buenosaires.gob.ar"></td>
+          <th>Teléfono / Interno</th>
+          <td><input class="input-line" type="number" inputmode="numeric" maxlength="15" pattern="\d{1,15}"></td>
+        </tr>
       </table>
     </div>
 
     <div class="bar-box">
-      <div class="bar"><div class="bar-label">SISTEMAS O SERVIDORES A LOS CUALES ACCEDERÁ A TRAVÉS DE LA VPN</div><div class="bar-fill"></div></div>
+      <div class="bar"><div class="bar-label">SISTEMAS O SERVIDORES A ACCEDER POR VPN</div><div class="bar-fill"></div></div>
       <div class="checks">
         <div class="check"><input class="cb" type="checkbox"><span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span></div>
         <div class="check"><input class="cb" type="checkbox"><span>SISEP</span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Cámaras ULTRA-IP</span></div>
         <div class="check"><input class="cb" type="checkbox"><span>Carpeta Compartida</span></div>
-        <div class="check"><input class="cb" type="checkbox"><span>Otros</span></div>
+        <div class="check"><input id="cbOtros" class="cb" type="checkbox"><span>Otros</span></div>
+        <div>
+          <label for="txOtros" class="hint">Detalles adicionales (si marcó "Otros")</label>
+          <textarea id="txOtros" rows="3" placeholder="Describa sistemas/servidores adicionales a requerir"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOJA 2 ===== -->
+  <section id="hoja2" class="sheet">
+    <div class="header-wrap">
+      <div class="header">
+        <div class="logo-column">
+          <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
+        </div>
+        <div class="title-column">
+          <div class="title-main">Seguridad Informática</div>
+          <div class="title-sub">Ministerio de Seguridad - CABA</div>
+        </div>
       </div>
     </div>
 
@@ -146,7 +179,7 @@
         <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
         <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP</th><td><input class="input-line" type="text"></td></tr>
         <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td>
+        <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td></tr>
       </table>
     </div>
 
@@ -159,7 +192,7 @@
     </div>
   </section>
 
-  <!-- ===== HOJA 2: INSTRUCTIVO ===== -->
+  <!-- ===== HOJA 3 ===== -->
   <section id="instructivo" class="sheet">
     <div class="header-wrap">
       <div class="header">
@@ -168,7 +201,7 @@
         </div>
         <div class="title-column">
           <div class="title-main">Seguridad Informática</div>
-          <div class="title-sub">Ministerio de Justicia y Seguridad - CABA</div>
+          <div class="title-sub">Ministerio de Seguridad - CABA</div>
         </div>
       </div>
     </div>
@@ -208,69 +241,5 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
   <script>
-    // Precarga del logo con fallback
-    (function(){
-      document.querySelectorAll('.logo-img').forEach(target=>{
-        const test=new Image();
-        test.crossOrigin='anonymous';
-        test.onload=()=>{ target.src=test.src; };
-        test.onerror=()=>{ console.warn('Logo no encontrado, se oculta'); target.style.display='none'; };
-        test.src=target.getAttribute('src');
-      });
-    })();
-
-    // === PDF: capturar cada hoja por separado y unirlas ===
-    document.getElementById('btnPdf').addEventListener('click', async ()=>{
-      try{ await document.fonts.ready; }catch(_){}
-
-      const p1 = document.getElementById('documento');
-      const p2 = document.getElementById('instructivo');
-
-      const opt = {
-        margin: 0,
-        filename: 'Solicitud_Alta_VPN.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          imageTimeout: 15000,
-          letterRendering: true,
-          onclone: (doc)=>{
-            // Quitar sombras y radios para evitar “pegado visual”
-            doc.querySelectorAll('.sheet').forEach(s=>{
-              s.style.margin = '0 auto';
-              s.style.boxShadow = 'none';
-              s.style.borderRadius = '0';
-            });
-          }
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      // 1) Primera hoja
-      let worker = html2pdf().set(opt).from(p1).toPdf();
-
-      // 2) Insertar nueva página y encadenar la segunda
-      worker.get('pdf').then(pdf => { pdf.addPage(); });
-
-      worker = worker
-        .from(p2)               // segunda hoja
-        .toContainer()
-        .toCanvas()
-        .toImg()
-        .toPdf()
-        .save();                // guarda el PDF resultante (2 páginas)
-    });
-    
-
-    // Limpiar formulario (sólo hoja 1)
-    document.getElementById('btnClear').addEventListener('click', ()=>{
-      document.querySelectorAll('#documento input, #documento textarea').forEach(el=>{
-        if (el.type==='checkbox' || el.type==='radio') el.checked=false;
-        else el.value='';
-      });
-    });
-  </script>
-</body>
-</html>
+  
 
