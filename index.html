@@ -84,12 +84,15 @@
       .toolbar{display:none!important}
       .sheet{margin:0 auto;border:2px solid #1a1a1a}
     }
+    
   </style>
 </head>
 <body>
+  
   <div class="toolbar">
     <button id="btnPdf" class="btn">Convertir a PDF</button>
-    <button id="btnClear" class="btn secondary">Limpiar Formulario</button>
+    <button id="btnClear" class="btn secondary">Limpiar Formulario</button;>
+    
   </div>
 
   <div id="doc">
@@ -252,6 +255,16 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 <script>
+  function setTodayIfEmpty() {
+    const dateInput = document.querySelector('#hoja1 input[type="date"]');
+    if (!dateInput) return;
+    // Fecha local (no UTC) para evitar desfasajes
+    const d = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate());
+    if (!dateInput.value) dateInput.value = `${y}-${m}-${day}`;
+  }
+   document.addEventListener('DOMContentLoaded', setTodayIfEmpty);
   function validarRequeridos(){
     let ok = true;
     ['inpNombre','inpCuil','inpCalle','inpNumero'].forEach(id=>{
@@ -356,9 +369,11 @@
   });
 
   document.getElementById('btnClear').addEventListener('click', ()=>{
+
     document.querySelectorAll('#hoja1 input, #hoja1 textarea').forEach(el=>{
       el.classList.remove('invalid');
       if (el.type==='checkbox' || el.type==='radio') el.checked=false; else el.value='';
     });
+    setTodayIfEmpty();
   });
 </script>
