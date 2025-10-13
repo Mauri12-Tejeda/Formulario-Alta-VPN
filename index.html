@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Solicitud de Alta de VPN – 3 Hojas</title>
+  <title>Solicitud de Alta de VPN – 2 Hojas</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,17 @@
     *{box-sizing:border-box}
     body{margin:0;background:#f3f5f8;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
 
-    .sheet{width:210mm; padding:8mm; background:#fff; border:2px solid #1a1a1a; margin:5mm auto; overflow:hidden; page-break-inside:avoid}
+    /* === HOJA A4 EXACTA === */
+    .sheet{
+      width:210mm;
+      height:297mm;         /* 1 hoja exacta */
+      padding:8mm;
+      background:#fff;
+      border:2px solid #1a1a1a;
+      margin:5mm auto;      /* solo vista en pantalla */
+      overflow:hidden;      /* recorta cualquier sobrante */
+      page-break-inside:avoid;
+    }
 
     .header-wrap{border:1.6px solid #343a40;border-radius:6px;overflow:hidden;background:#f2f5f9}
     .header{display:grid;grid-template-columns:200px 1fr;align-items:center}
@@ -38,11 +48,17 @@
     .req{color:#c1121f;font-weight:700}
     .invalid{outline:2px solid #c1121f !important; background:#fff2f2}
 
-    .checks{padding:10px;display:grid;gap:8px}
+    /* SISTEMAS */
+    .checks-wrap{padding:10px}
+    .checks-grid{display:grid;gap:12px;grid-template-columns:1fr 45%;align-items:start}
+    .checks-left{display:grid;gap:8px}
     .check{display:grid;grid-template-columns:16px 1fr;gap:8px;align-items:center}
     .check input.cb{appearance:none;width:14px;height:14px;margin:0;cursor:pointer;border:1.4px solid #343a40;border-radius:2px;background:#fff}
     .check input.cb:checked{background:#0067c6}
     .hint{color:#444;font-size:12px}
+    .details-box label{display:block;margin-bottom:6px;font-size:12px;color:#333}
+    .details-box textarea{min-height:92px}
+    @media (max-width:1000px){.checks-grid{grid-template-columns:1fr}}
 
     .notice{margin-top:4mm;border:1px solid #000;border-radius:4px;padding:0 4mm 3mm}
     .notice-head{background:#000;color:#fff;text-align:center;font-weight:700;padding:3mm 2mm;margin:-1px -1px 3mm -1px;border-radius:4px 4px 0 0;font-size:12.5px;letter-spacing:.3px}
@@ -63,7 +79,11 @@
     .btn{background:#0067c6;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,103,198,.25)}
     .btn.secondary{background:#6c757d}
 
-    @media print{.toolbar{display:none!important}}
+    @media print{
+      @page { margin: 0; }           /* sin márgenes del navegador */
+      .toolbar{display:none!important}
+      .sheet{margin:0 auto;border:2px solid #1a1a1a}
+    }
   </style>
 </head>
 <body>
@@ -72,265 +92,273 @@
     <button id="btnClear" class="btn secondary">Limpiar Formulario</button>
   </div>
 
-  <!-- ===== HOJA 1 ===== -->
-  <section id="hoja1" class="sheet">
-    <div class="header-wrap">
-      <div class="header">
-        <div class="logo-column">
-          <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
-        </div>
-        <div class="title-column">
-          <div class="title-main">Seguridad Informática</div>
-          <div class="title-sub">Ministerio de Seguridad - CABA</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bar-box">
-      <div class="bar"><div class="bar-label">DATOS DE LA SOLICITUD</div><div class="bar-fill"></div></div>
-      <table class="grid">
-        <tr>
-          <th>Fecha de Solicitud</th>
-          <td><input type="date" placeholder="dd/mm/aaaa"></td>
-          <th>Referido a CCOO</th>
-          <td><input class="input-line" type="text" placeholder="NO-AAAA-xxxxx-GCABA-XX"></td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="bar-box">
-      <div class="bar"><div class="bar-label">DATOS DEL SOLICITANTE</div><div class="bar-fill"></div></div>
-      <table class="grid">
-        <tr>
-          <th><span class="req">Apellido y Nombre</span></th>
-          <td colspan="3"><input id="inpNombre" class="input-line" type="text" required pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[\s'][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)+$" title="Ingrese nombre y apellido (solo letras y espacios)"></td>
-        </tr>
-        <tr>
-          <th>Usuario de Dominio</th>
-          <td><input class="input-line" type="text"></td>
-          <th><span class="req">Nº de CUIL</span></th>
-          <td>
-            <input id="inpCuil" class="input-line" type="text" inputmode="numeric" maxlength="11" required oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)" pattern="^\d{11}$" title="11 dígitos sin guiones">
-          </td>
-        </tr>
-        <tr>
-          <th>Cargo</th>
-          <td><input class="input-line" type="text"></td>
-          <th>LP Nº</th>
-          <td><input class="input-line" type="number" min="0" step="1"></td>
-        </tr>
-        <tr>
-          <th>División / Departamento</th>
-          <td colspan="3"><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th>Dependencia</th>
-          <td colspan="3"><input class="input-line" type="text"></td>
-        </tr>
-        <tr>
-          <th><span class="req">Calle</span></th>
-          <td><input id="inpCalle" class="input-line" type="text" required></td>
-          <th><span class="req">Nº</span></th>
-          <td><input id="inpNumero" class="input-line" type="number" min="0" step="1" required></td>
-        </tr>
-        <tr>
-          <th>E-Mail</th>
-          <td><input class="input-line" type="email" placeholder="usuario@buenosaires.gob.ar"></td>
-          <th>Teléfono / Interno</th>
-          <td><input class="input-line" type="number" inputmode="numeric" maxlength="15" pattern="\d{1,15}"></td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="bar-box">
-      <div class="bar"><div class="bar-label">SISTEMAS O SERVIDORES A ACCEDER POR VPN</div><div class="bar-fill"></div></div>
-      <div class="checks">
-        <div class="check"><input class="cb" type="checkbox"><span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span></div>
-        <div class="check"><input class="cb" type="checkbox"><span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span></div>
-        <div class="check"><input class="cb" type="checkbox"><span>SISEP</span></div>
-        <div class="check"><input class="cb" type="checkbox"><span>Cámaras ULTRA-IP</span></div>
-        <div class="check"><input class="cb" type="checkbox"><span>Carpeta Compartida</span></div>
-        <div class="check"><input id="cbOtros" class="cb" type="checkbox"><span>Otros</span></div>
-        <div>
-          <label for="txOtros" class="hint">Detalles adicionales (si marcó "Otros")</label>
-          <textarea id="txOtros" rows="3" placeholder="Describa sistemas/servidores adicionales a requerir"></textarea>
+  <div id="doc">
+    <!-- ===== HOJA 1 ===== -->
+    <section id="hoja1" class="sheet">
+      <div class="header-wrap">
+        <div class="header">
+          <div class="logo-column">
+            <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
+          </div>
+          <div class="title-column">
+            <div class="title-main">Seguridad Informática</div>
+            <div class="title-sub">Ministerio de Seguridad - CABA</div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ===== HOJA 2 ===== -->
-  <section id="hoja2" class="sheet">
-    <div class="header-wrap">
-      <div class="header">
-        <div class="logo-column">
-          <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
-        </div>
-        <div class="title-column">
-          <div class="title-main">Seguridad Informática</div>
-          <div class="title-sub">Ministerio de Seguridad - CABA</div>
+      <div class="bar-box">
+        <div class="bar"><div class="bar-label">DATOS DE LA SOLICITUD</div><div class="bar-fill"></div></div>
+        <table class="grid">
+          <tr>
+            <th>Fecha de Solicitud</th>
+            <td><input type="date" placeholder="dd/mm/aaaa"></td>
+            <th>Referido a CCOO</th>
+            <td><input class="input-line" type="text" placeholder="NO-AAAA-xxxxx-GCABA-XX"></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="bar-box">
+        <div class="bar"><div class="bar-label">DATOS DEL SOLICITANTE</div><div class="bar-fill"></div></div>
+        <table class="grid">
+          <tr>
+            <th><span class="req">Apellido y Nombre</span></th>
+            <td colspan="3"><input id="inpNombre" class="input-line" type="text" required pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[\s'][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)+$" title="Ingrese nombre y apellido (solo letras y espacios)"></td>
+          </tr>
+          <tr>
+            <th>Usuario de Dominio</th>
+            <td><input class="input-line" type="text"></td>
+            <th><span class="req">Nº de CUIL</span></th>
+            <td>
+              <input id="inpCuil" class="input-line" type="text" inputmode="numeric" maxlength="11" required oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)" pattern="^\d{11}$" title="11 dígitos sin guiones">
+            </td>
+          </tr>
+          <tr>
+            <th>Cargo</th>
+            <td><input class="input-line" type="text"></td>
+            <th>LP Nº</th>
+            <td><input class="input-line" type="number" min="0" step="1"></td>
+          </tr>
+          <tr>
+            <th>División / Departamento</th>
+            <td colspan="3"><input class="input-line" type="text"></td>
+          </tr>
+          <tr>
+            <th>Dependencia</th>
+            <td colspan="3"><input class="input-line" type="text"></td>
+          </tr>
+          <tr>
+            <th><span class="req">Calle</span></th>
+            <td><input id="inpCalle" class="input-line" type="text" required></td>
+            <th><span class="req">Nº</span></th>
+            <td><input id="inpNumero" class="input-line" type="number" min="0" step="1" required></td>
+          </tr>
+          <tr>
+            <th>E-Mail</th>
+            <td><input class="input-line" type="email" placeholder="usuario@buenosaires.gob.ar"></td>
+            <th>Teléfono / Interno</th>
+            <td><input class="input-line" type="number" inputmode="numeric" maxlength="15" pattern="\d{1,15}"></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="bar-box">
+        <div class="bar"><div class="bar-label">SISTEMAS O SERVIDORES A ACCEDER POR VPN</div><div class="bar-fill"></div></div>
+        <div class="checks-wrap">
+          <div class="checks-grid">
+            <div class="checks-left">
+              <label class="check"><input class="cb" type="checkbox"><span>Servicios Policiales <span class="hint">(SIRHU, SILOL, SMLAM, SIGET, SIGENO, SIFOR, CREA, GAP, etc.)</span></span></label>
+              <label class="check"><input class="cb" type="checkbox"><span>Servicios ASI <span class="hint">(SADE, SIGAF, SIGAFWEB, BAC, etc.)</span></span></label>
+              <label class="check"><input class="cb" type="checkbox"><span>SISEP</span></label>
+              <label class="check"><input class="cb" type="checkbox"><span>Cámaras ULTRA-IP</span></label>
+              <label class="check"><input class="cb" type="checkbox"><span>Carpeta Compartida</span></label>
+              <label class="check"><input id="cbOtros" class="cb" type="checkbox"><span>Otros</span></label>
+            </div>
+            <div class="details-box">
+              <label for="txOtros">Detalles adicionales (si marcó "Otros")</label>
+              <textarea id="txOtros" rows="6" placeholder="Describa sistemas/servidores adicionales a requerir"></textarea>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="bar-box">
-      <div class="bar"><div class="bar-label">RESPONSABLE DE LA DEPENDENCIA</div><div class="bar-fill"></div></div>
-      <table class="grid">
-        <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP</th><td><input class="input-line" type="text"></td></tr>
-        <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-        <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td></tr>
-      </table>
-    </div>
+      <div class="bar-box">
+        <div class="bar"><div class="bar-label">RESPONSABLE DE LA DEPENDENCIA</div><div class="bar-fill"></div></div>
+        <table class="grid">
+          <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
+          <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP</th><td><input class="input-line" type="text"></td></tr>
+          <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
+          <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td></tr>
+        </table>
+      </div>
 
-    <div class="notice">
-      <div class="notice-head">AVISO IMPORTANTE</div>
-      <ol class="notice-list">
-        <li>Al finalizar de completar el formulario, recuerde enviarlo vía CCOO a Jonatan PALUMBO (JPALUMBO).</li>
-        <li>Ante cualquier duda comuníquese vía mail a <a href="mailto:soportemjys@buenosaires.gob.ar">soportemjys@buenosaires.gob.ar</a> o al teléfono: 4309-9800 int 115151.</li>
-      </ol>
-    </div>
-  </section>
+      <div class="notice">
+        <div class="notice-head">AVISO IMPORTANTE</div>
+        <ol class="notice-list">
+          <li>Al finalizar de completar el formulario, recuerde enviarlo vía CCOO a Jonatan PALUMBO (JPALUMBO).</li>
+          <li>Ante cualquier duda comuníquese vía mail a <a href="mailto:soportemjys@buenosaires.gob.ar">soportemjys@buenosaires.gob.ar</a> o al teléfono: 4309-9800 int 115151.</li>
+        </ol>
+      </div>
+    </section>
 
-  <!-- ===== HOJA 3 ===== -->
-  <section id="instructivo" class="sheet">
-    <div class="header-wrap">
-      <div class="header">
-        <div class="logo-column">
-          <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
-        </div>
-        <div class="title-column">
-          <div class="title-main">Seguridad Informática</div>
-          <div class="title-sub">Ministerio de Seguridad - CABA</div>
+    <!-- ===== HOJA 2 (Instructivo) ===== -->
+    <section id="instructivo" class="sheet">
+      <div class="header-wrap">
+        <div class="header">
+          <div class="logo-column">
+            <img class="logo-img" src="./logo-para-VPN.png" alt="" crossorigin="anonymous">
+          </div>
+          <div class="title-column">
+            <div class="title-main">Seguridad Informática</div>
+            <div class="title-sub">Ministerio de Seguridad - CABA</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="hlead">INSTRUCCIONES PARA LA CONFECCIÓN DEL FORMULARIO DE SOLICITUD DE VPN</div>
+      <div class="hlead">INSTRUCCIONES PARA LA CONFECCIÓN DEL FORMULARIO DE SOLICITUD DE VPN</div>
 
-    <div class="inst-body">
-      <ol class="inst">
-        <li>Los campos en <strong>rojo</strong> son obligatorios. De no completarse, se descartará el formulario.</li>
-        <li>Completar la <strong>Fecha de Requerimiento</strong>.</li>
-        <li>Indicar el <strong>Nº de CCOO</strong> de referencia. Ej.: <em>NO-2022-xxxxxxx-GCABA-SS</em>.</li>
-        <li>Nombre completo del solicitante.</li>
-        <li>Usuario de Dominio (usuario con el que ingresa a la PC de la dependencia).</li>
-        <li><strong>No se puede prestar ni compartir</strong> la cuenta de usuario.
-          <div class="note">Deberá solicitar el <strong>Área de Dominio</strong> al siguiente correo: <em>dominio.mjyseg@buenosaires.gob.ar</em></div>
-        </li>
-        <li>Indicar <strong>Nº de CUIL</strong> (sin guiones).</li>
-        <li>Indicar <strong>LP del Solicitante</strong> (Personal contratado no completa).</li>
-        <li>Indicar el <strong>e-mail</strong> del solicitante (<em>usuario@buenosaires.gob.ar</em>).
-          <div class="note">En caso de no poseer, <strong>realizar la solicitud</strong> correspondiente (ver Intranet).</div>
-        </li>
-        <li>Indicar <strong>Teléfono o Interno</strong>.</li>
-        <li>Indicar <strong>Sistemas o servidores</strong> a los cuales accederá por VPN.
-          <div class="note">Puede elegir varias opciones. Carpeta Compartida solo si posee acceso; si requiere nuevo acceso, solicitarlo al Área de Dominio: <em>dominio.mjyseg@buenosaires.gob.ar</em></div>
-        </li>
-      </ol>
+      <div class="inst-body">
+        <ol class="inst">
+          <li>Los campos en <strong>rojo</strong> son obligatorios. De no completarse, se descartará el formulario.</li>
+          <li>Completar la <strong>Fecha de Requerimiento</strong>.</li>
+          <li>Indicar el <strong>Nº de CCOO</strong> de referencia. Ej.: <em>NO-2022-xxxxxxx-GCABA-SS</em>.</li>
+          <li>Nombre completo del solicitante.</li>
+          <li>Usuario de Dominio (usuario con el que ingresa a la PC de la dependencia).</li>
+          <li><strong>No se puede prestar ni compartir</strong> la cuenta de usuario.
+            <div class="note">Deberá solicitar el <strong>Área de Dominio</strong> al siguiente correo: <em>dominio.mjyseg@buenosaires.gob.ar</em></div>
+          </li>
+          <li>Indicar <strong>Nº de CUIL</strong> (sin guiones).</li>
+          <li>Indicar <strong>LP del Solicitante</strong> (Personal contratado no completa).</li>
+          <li>Indicar el <strong>e-mail</strong> del solicitante (<em>usuario@buenosaires.gob.ar</em>).
+            <div class="note">En caso de no poseer, <strong>realizar la solicitud</strong> correspondiente (ver Intranet).</div>
+          </li>
+          <li>Indicar <strong>Teléfono o Interno</strong>.</li>
+          <li>Indicar <strong>Sistemas o servidores</strong> a los cuales accederá por VPN.
+            <div class="note">Puede elegir varias opciones. Carpeta Compartida solo si posee acceso; si requiere nuevo acceso, solicitarlo al Área de Dominio: <em>dominio.mjyseg@buenosaires.gob.ar</em></div>
+          </li>
+        </ol>
 
-      <div class="footbox">
-        <strong>AVISO IMPORTANTE</strong>
-        <div class="note">
-          1. Al finalizar el completar, enviar escaneado vía CCOO a <em>JUAN P. PALMIERI</em> o <em>ALMIBES</em>.<br>
-          2. Ante consultas o asistencia: <em>seguridadinformatica@buenosaires.gob.ar</em>
+        <div class="footbox">
+          <strong>AVISO IMPORTANTE</strong>
+          <div class="note">
+            1. Al finalizar el completar, enviar escaneado vía CCOO a <em>JUAN P. PALMIERI</em> o <em>ALMIBES</em>.<br>
+            2. Ante consultas o asistencia: <em>seguridadinformatica@buenosaires.gob.ar</em>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-  <script>
-    // Precarga del logo con fallback
-    (function(){
-      document.querySelectorAll('.logo-img').forEach(target=>{
-        const test=new Image();
-        test.crossOrigin='anonymous';
-        test.onload=()=>{ target.src=test.src; };
-        test.onerror=()=>{ console.warn('Logo no encontrado, se oculta'); target.style.display='none'; };
-        test.src=target.getAttribute('src');
-      });
-    })();
-
-    // Validación requerida antes de exportar
-    function validarRequeridos(){
-      let ok = true;
-      const reqIds = ['inpNombre','inpCuil','inpCalle','inpNumero'];
-      reqIds.forEach(id=>{
-        const el = document.getElementById(id);
-        if(!el) return;
-        el.classList.remove('invalid');
-        if(!el.checkValidity()){
-          el.classList.add('invalid');
-          if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
-          ok = false;
-        }
-      });
-      const cbOtros = document.getElementById('cbOtros');
-      const txOtros = document.getElementById('txOtros');
-      if(cbOtros && cbOtros.checked && txOtros && !txOtros.value.trim()){
-        txOtros.classList.add('invalid');
-        txOtros.scrollIntoView({behavior:'smooth',block:'center'});
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script>
+  function validarRequeridos(){
+    let ok = true;
+    ['inpNombre','inpCuil','inpCalle','inpNumero'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.remove('invalid');
+      if(!el.checkValidity()){
+        el.classList.add('invalid');
+        if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
         ok = false;
-      }else if(txOtros){ txOtros.classList.remove('invalid'); }
-      return ok;
+      }
+    });
+    const cbOtros = document.getElementById('cbOtros');
+    const txOtros = document.getElementById('txOtros');
+    if(cbOtros && cbOtros.checked && txOtros && !txOtros.value.trim()){
+      txOtros.classList.add('invalid');
+      txOtros.scrollIntoView({behavior:'smooth',block:'center'});
+      ok = false;
+    }else if(txOtros){ txOtros.classList.remove('invalid'); }
+    return ok;
+  }
+
+  // Carga un script si no existe (para jsPDF cuando el bundle no lo expone)
+  function loadScript(src){
+    return new Promise((resolve, reject)=>{
+      const s = document.createElement('script');
+      s.src = src; s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  // Renderiza un nodo a DataURL usando el html2canvas interno de html2pdf
+  async function nodeToDataURL(el){
+    const worker = html2pdf().set({
+      margin: 0,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: false,     // no exigir CORS
+        allowTaint: true,   // si el logo no tiene CORS, igual renderiza
+        imageTimeout: 0,
+        letterRendering: true,
+        onclone: (doc)=>{
+          // ocultar la toolbar en el clon
+          const tb = doc.querySelector('.toolbar');
+          if (tb) tb.style.display = 'none';
+          // asegurar que cada hoja sea A4 exacta
+          doc.querySelectorAll('.sheet').forEach(s=>{
+            s.style.margin='0 auto';
+            s.style.boxShadow='none';
+            s.style.borderRadius='0';
+            s.style.height='297mm';
+            s.style.overflow='hidden';
+            s.style.pageBreakInside='avoid';
+          });
+        }
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(el).toCanvas();
+
+    const canvas = await worker.get('canvas');
+    return canvas.toDataURL('image/jpeg', 0.98);
+  }
+
+  document.getElementById('btnPdf').addEventListener('click', async ()=>{
+    try { await document.fonts.ready; } catch(_) {}
+
+    if(!validarRequeridos()){
+      alert('Por favor complete los campos obligatorios marcados en rojo.');
+      return;
     }
 
-    // Generar PDF de 3 páginas
-    document.getElementById('btnPdf').addEventListener('click', async ()=>{
-      try{ await document.fonts.ready; }catch(_){}
-      if(!validarRequeridos()){
-        alert('Por favor complete los campos obligatorios marcados en rojo.');
-        return;
+    const hoja1 = document.getElementById('hoja1');
+    const hoja2 = document.getElementById('instructivo');
+
+    const cuil = (document.getElementById('inpCuil')?.value || '')
+                  .replace(/\D/g,'').slice(0,11) || 'SIN-CUIL';
+
+    try{
+      // 1) Render de cada hoja a imagen (consistente y sin páginas extra)
+      const [img1, img2] = await Promise.all([nodeToDataURL(hoja1), nodeToDataURL(hoja2)]);
+
+      // 2) Asegurar jsPDF disponible (algunos builds del bundle no lo exponen)
+      let jsPDFCtor = (window.jspdf && (window.jspdf.jsPDF || window.jspdf.default)) || window.jsPDF;
+      if (!jsPDFCtor){
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+        jsPDFCtor = window.jspdf && (window.jspdf.jsPDF || window.jspdf.default);
       }
+      if (!jsPDFCtor) throw new Error('jsPDF no disponible');
 
-      const p1 = document.getElementById('hoja1');
-      const p2 = document.getElementById('hoja2');
-      const p3 = document.getElementById('instructivo');
+      // 3) Crear PDF con 2 páginas exactas
+      const pdf = new jsPDFCtor({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      pdf.addImage(img1, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      pdf.addPage();
+      pdf.addImage(img2, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      pdf.save(`Alta VPN - ${cuil}.pdf`);
+    } catch (e){
+      console.error(e);
+      alert('No se pudo generar el PDF. Revisá la consola por detalles.');
+    }
+  });
 
-      const opt = {
-        margin: 0,
-        filename: 'Solicitud_Alta_VPN.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          imageTimeout: 15000,
-          letterRendering: true,
-          onclone: (doc)=>{
-            doc.querySelectorAll('.sheet').forEach(s=>{
-              s.style.margin = '0 auto';
-              s.style.boxShadow = 'none';
-              s.style.borderRadius = '0';
-            });
-          }
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      // 1) Primera hoja
-      let worker = html2pdf().set(opt).from(p1).toPdf();
-
-      // 2) Agregar segunda página
-      worker = worker.get('pdf').then(pdf => { pdf.addPage(); }).then(()=>{
-        return html2pdf().set(opt).from(p2).toContainer().toCanvas().toImg().toPdf().get('pdf');
-      });
-
-      // 3) Agregar tercera página
-      worker = worker.then(pdf => { pdf.addPage(); return pdf; }).then(()=>{
-        return html2pdf().set(opt).from(p3).toContainer().toCanvas().toImg().toPdf().save();
-      });
+  document.getElementById('btnClear').addEventListener('click', ()=>{
+    document.querySelectorAll('#hoja1 input, #hoja1 textarea').forEach(el=>{
+      el.classList.remove('invalid');
+      if (el.type==='checkbox' || el.type==='radio') el.checked=false; else el.value='';
     });
-
-    // Limpiar formulario (hojas 1 y 2)
-    document.getElementById('btnClear').addEventListener('click', ()=>{
-      document.querySelectorAll('#hoja1 input, #hoja1 textarea, #hoja2 input').forEach(el=>{
-        el.classList.remove('invalid');
-        if (el.type==='checkbox' || el.type==='radio') el.checked=false; else el.value='';
-      });
-    });
-  </script>
-</body>
-</html>
-
-
+  });
+</script>
