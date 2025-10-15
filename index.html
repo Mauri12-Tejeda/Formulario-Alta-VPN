@@ -155,7 +155,7 @@
             <th><span class="req">Calle</span></th>
             <td><input id="inpCalle" class="input-line" type="text" required></td>
             <th><span class="req">Nº</span></th>
-            <td><input id="inpNumero" class="input-line" type="number" min="0" step="1" required></td>
+            <td><input class="input-line" type="number" inputmode="numeric" maxlength="5" required oninput="this.value=this.value.replace(/\D/g,'').slice(0,5)" pattern="^\d{5}$" title="5 dígitos sin guiones"></td>
           </tr>
           <tr>
             <th>E-Mail</th>
