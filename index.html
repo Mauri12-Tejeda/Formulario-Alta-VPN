@@ -84,15 +84,29 @@
       .toolbar{display:none!important}
       .sheet{margin:0 auto;border:2px solid #1a1a1a}
     }
-    
+
+    /* === Ajustes de ancho: E-Mail largo y Teléfono compacto === */
+    #tblSolicitante{
+      table-layout: fixed;        /* clave para que el colgroup fije anchos */
+    }
+    #tblSolicitante th, 
+    #tblSolicitante td{
+      white-space: normal;
+      word-break: break-word;
+    }
+    #tblSolicitante td:nth-child(4) input{
+      max-width: 35mm;
+    }
+    #tblSolicitante input[type="number"][inputmode="numeric"]{
+      max-width: 35mm;
+    }
   </style>
 </head>
 <body>
   
   <div class="toolbar">
     <button id="btnPdf" class="btn">Convertir a PDF</button>
-    <button id="btnClear" class="btn secondary">Limpiar Formulario</button;>
-    
+    <button id="btnClear" class="btn secondary">Limpiar Formulario</button>
   </div>
 
   <div id="doc">
@@ -124,7 +138,13 @@
 
       <div class="bar-box">
         <div class="bar"><div class="bar-label">DATOS DEL SOLICITANTE</div><div class="bar-fill"></div></div>
-        <table class="grid">
+        <table id="tblSolicitante" class="grid">
+          <colgroup>
+            <col style="width:16%">  <!-- TH etiquetas -->
+            <col style="width:50%">  <!-- E-Mail (ancho) -->
+            <col style="width:16%">  <!-- TH Teléfono / Interno -->
+            <col style="width:14%">  <!-- Campo Teléfono -->
+          </colgroup>
           <tr>
             <th><span class="req">Apellido y Nombre</span></th>
             <td colspan="3"><input id="inpNombre" class="input-line" type="text" required pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[\s'][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)+$" title="Ingrese nombre y apellido (solo letras y espacios)"></td>
@@ -155,11 +175,18 @@
             <th><span class="req">Calle</span></th>
             <td><input id="inpCalle" class="input-line" type="text" required></td>
             <th><span class="req">Nº</span></th>
-            <td><input class="input-line" type="number" inputmode="numeric" maxlength="5" required oninput="this.value=this.value.replace(/\D/g,'').slice(0,5)" pattern="^\d{5}$" title="5 dígitos sin guiones"></td>
+            <td>
+              <input id="inpNumero" class="input-line" type="number" inputmode="numeric" maxlength="5" required oninput="this.value=this.value.replace(/\D/g,'').slice(0,5)" pattern="^\d{5}$" title="5 dígitos sin guiones">
+            </td>
           </tr>
           <tr>
             <th>E-Mail</th>
-            <td><input class="input-line" type="email" placeholder="usuario@buenosaires.gob.ar"></td>
+            <td>
+              <input id="emailSolic" class="input-line" type="email"
+                     placeholder="usuario@buenosaires.gob.ar"
+                     pattern="^[a-zA-Z0-9._%+-]+@(buenosaires\.gob\.ar|policiadelaciudad\.gob\.ar|seguridadciudad\.gob\.ar)$"
+                     title="Debe usar @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar">
+            </td>
             <th>Teléfono / Interno</th>
             <td><input class="input-line" type="number" inputmode="numeric" maxlength="15" pattern="\d{1,15}"></td>
           </tr>
@@ -192,7 +219,16 @@
           <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
           <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP</th><td><input class="input-line" type="text"></td></tr>
           <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-          <tr><th>E-Mail</th><td><input class="input-line" type="email"></td><th>Teléfono / Interno</th><td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td></tr>
+          <tr>
+            <th>E-Mail</th>
+            <td>
+              <input id="emailResp" class="input-line" type="email"
+                     pattern="^[a-zA-Z0-9._%+-]+@(buenosaires\.gob\.ar|policiadelaciudad\.gob\.ar|seguridadciudad\.gob\.ar)$"
+                     title="Debe usar @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar">
+            </td>
+            <th>Teléfono / Interno</th>
+            <td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td>
+          </tr>
         </table>
       </div>
 
@@ -241,8 +277,6 @@
             <div class="note">Puede elegir varias opciones. Carpeta Compartida solo si posee acceso; si requiere nuevo acceso, solicitarlo al Área de Dominio: <em>dominio.mjyseg@buenosaires.gob.ar</em></div>
           </li>
         </ol>
-
-        
       </div>
     </section>
   </div>
@@ -252,13 +286,42 @@
   function setTodayIfEmpty() {
     const dateInput = document.querySelector('#hoja1 input[type="date"]');
     if (!dateInput) return;
-    // Fecha local (no UTC) para evitar desfasajes
     const d = new Date();
     const pad = n => String(n).padStart(2,'0');
     const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate());
     if (!dateInput.value) dateInput.value = `${y}-${m}-${day}`;
   }
-   document.addEventListener('DOMContentLoaded', setTodayIfEmpty);
+  document.addEventListener('DOMContentLoaded', setTodayIfEmpty);
+
+  // ====== VALIDACIÓN DE DOMINIOS DE E-MAIL ======
+  const allowedDomains = new Set([
+    "buenosaires.gob.ar",
+    "policiadelaciudad.gob.ar",
+    "seguridadciudad.gob.ar"
+  ]);
+  function isAllowedEmail(email) {
+    if (!email) return false;
+    const at = email.indexOf("@");
+    if (at === -1) return false;
+    const domain = email.slice(at + 1).toLowerCase().trim();
+    return allowedDomains.has(domain);
+  }
+  function attachLiveEmailValidation(el) {
+    if (!el) return;
+    el.addEventListener("input", function () {
+      const v = el.value.trim();
+      if (v && !isAllowedEmail(v)) {
+        el.setCustomValidity("El correo debe ser institucional: @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar");
+      } else {
+        el.setCustomValidity("");
+      }
+    });
+  }
+  const emailSolic = document.getElementById('emailSolic');
+  const emailResp  = document.getElementById('emailResp');
+  attachLiveEmailValidation(emailSolic);
+  attachLiveEmailValidation(emailResp);
+
   function validarRequeridos(){
     let ok = true;
     ['inpNombre','inpCuil','inpCalle','inpNumero'].forEach(id=>{
@@ -267,10 +330,11 @@
       el.classList.remove('invalid');
       if(!el.checkValidity()){
         el.classList.add('invalid');
-        if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+        if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity(); el.focus(); }
         ok = false;
       }
     });
+
     const cbOtros = document.getElementById('cbOtros');
     const txOtros = document.getElementById('txOtros');
     if(cbOtros && cbOtros.checked && txOtros && !txOtros.value.trim()){
@@ -278,6 +342,21 @@
       txOtros.scrollIntoView({behavior:'smooth',block:'center'});
       ok = false;
     }else if(txOtros){ txOtros.classList.remove('invalid'); }
+
+    [emailSolic, emailResp].forEach(el=>{
+      if (!el) return;
+      el.classList.remove('invalid');
+      const v = el.value.trim();
+      if (v && !isAllowedEmail(v)) {
+        el.setCustomValidity("El correo debe ser institucional: @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar");
+        el.classList.add('invalid');
+        if (ok) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity(); el.focus(); }
+        ok = false;
+      } else {
+        el.setCustomValidity("");
+      }
+    });
+
     return ok;
   }
 
@@ -298,14 +377,15 @@
       html2canvas: {
         backgroundColor: '#ffffff',
         scale: 2,
-        useCORS: false,     // no exigir CORS
-        allowTaint: true,   // si el logo no tiene CORS, igual renderiza
+        useCORS: false,
+        allowTaint: true,
         imageTimeout: 0,
         letterRendering: true,
         onclone: (doc)=>{
           // ocultar la toolbar en el clon
           const tb = doc.querySelector('.toolbar');
           if (tb) tb.style.display = 'none';
+
           // asegurar que cada hoja sea A4 exacta
           doc.querySelectorAll('.sheet').forEach(s=>{
             s.style.margin='0 auto';
@@ -315,6 +395,35 @@
             s.style.overflow='hidden';
             s.style.pageBreakInside='avoid';
           });
+
+          /* ==== FIX FECHA: mostrar DD/MM/YYYY en el render del PDF ==== */
+          const dateInputs = doc.querySelectorAll('input[type="date"]');
+          dateInputs.forEach(inp=>{
+            const iso = inp.value || '';
+            let ddmmyyyy = iso;
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+            if (m) ddmmyyyy = `${m[3]}/${m[2]}/${m[1]}`;
+
+            // reemplazar por input de texto "congelado" con el mismo look
+            const txt = doc.createElement('input');
+            txt.type = 'text';
+            txt.value = ddmmyyyy;
+            txt.readOnly = true;
+            txt.className = inp.className;
+
+            const cs = doc.defaultView.getComputedStyle(inp);
+            txt.style.width         = cs.width;
+            txt.style.padding       = cs.padding;
+            txt.style.font          = cs.font;
+            txt.style.background    = cs.backgroundColor;
+            txt.style.borderTop     = `${cs.borderTopWidth} ${cs.borderTopStyle} ${cs.borderTopColor}`;
+            txt.style.borderRight   = `${cs.borderRightWidth} ${cs.borderRightStyle} ${cs.borderRightColor}`;
+            txt.style.borderBottom  = `${cs.borderBottomWidth} ${cs.borderBottomStyle} ${cs.borderBottomColor}`;
+            txt.style.borderLeft    = `${cs.borderLeftWidth} ${cs.borderLeftStyle} ${cs.borderLeftColor}`;
+
+            inp.parentNode.replaceChild(txt, inp);
+          });
+          /* ============================================================ */
         }
       },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -328,7 +437,7 @@
     try { await document.fonts.ready; } catch(_) {}
 
     if(!validarRequeridos()){
-      alert('Por favor complete los campos obligatorios marcados en rojo.');
+      alert('Por favor complete los campos obligatorios o corrija los e-mails institucionales.');
       return;
     }
 
@@ -339,10 +448,8 @@
                   .replace(/\D/g,'').slice(0,11) || 'SIN-CUIL';
 
     try{
-      // 1) Render de cada hoja a imagen (consistente y sin páginas extra)
       const [img1, img2] = await Promise.all([nodeToDataURL(hoja1), nodeToDataURL(hoja2)]);
 
-      // 2) Asegurar jsPDF disponible (algunos builds del bundle no lo exponen)
       let jsPDFCtor = (window.jspdf && (window.jspdf.jsPDF || window.jspdf.default)) || window.jsPDF;
       if (!jsPDFCtor){
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
@@ -350,7 +457,6 @@
       }
       if (!jsPDFCtor) throw new Error('jsPDF no disponible');
 
-      // 3) Crear PDF con 2 páginas exactas
       const pdf = new jsPDFCtor({ unit: 'mm', format: 'a4', orientation: 'portrait' });
       pdf.addImage(img1, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
       pdf.addPage();
@@ -363,11 +469,13 @@
   });
 
   document.getElementById('btnClear').addEventListener('click', ()=>{
-
     document.querySelectorAll('#hoja1 input, #hoja1 textarea').forEach(el=>{
       el.classList.remove('invalid');
       if (el.type==='checkbox' || el.type==='radio') el.checked=false; else el.value='';
+      if (typeof el.setCustomValidity === 'function') el.setCustomValidity('');
     });
     setTodayIfEmpty();
   });
 </script>
+</body>
+</html>
