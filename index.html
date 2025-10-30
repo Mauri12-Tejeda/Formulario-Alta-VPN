@@ -309,15 +309,20 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 <script>
-  function setTodayIfEmpty() {
-    const dateInput = document.querySelector('#hoja1 input[type="date"]');
-    if (!dateInput) return;
-    const d = new Date();
-    const pad = n => String(n).padStart(2,'0');
-    const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate());
-    if (!dateInput.value) dateInput.value = `${y}-${m}-${day}`;
-  }
-  document.addEventListener('DOMContentLoaded', setTodayIfEmpty);
+ function setTodayAndLock(){
+  const d = new Date(), pad = n => String(n).padStart(2, '0');
+  const iso = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const f = document.getElementById('fechaSolicitud');
+  if (!f) return;
+  f.value = iso;
+  f.setAttribute('min', iso);
+  f.setAttribute('max', iso);
+  f.readOnly = true;
+  f.style.pointerEvents = 'none';
+  f.addEventListener('keydown', e => e.preventDefault());
+  f.addEventListener('mousedown', e => e.preventDefault());
+}
+document.addEventListener('DOMContentLoaded', setTodayAndLock);
 
   // ====== VALIDACIÓN DE DOMINIOS DE E-MAIL ======
   const allowedDomains = new Set([
