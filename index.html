@@ -58,6 +58,7 @@
     .hint{color:#444;font-size:12px}
     .details-box label{display:block;margin-bottom:6px;font-size:12px;color:#333}
     .details-box textarea{min-height:92px}
+    .details-box textarea:disabled{background:#f5f5f5; color:#777; cursor:not-allowed}
     @media (max-width:1000px){.checks-grid{grid-template-columns:1fr}}
 
     .notice{margin-top:4mm;border:1px solid #000;border-radius:4px;padding:0 4mm 3mm}
@@ -80,26 +81,16 @@
     .btn.secondary{background:#6c757d}
 
     @media print{
-      @page { margin: 0; }           /* sin márgenes del navegador */
+      @page { margin: 0; }
       .toolbar{display:none!important}
       .sheet{margin:0 auto;border:2px solid #1a1a1a}
     }
 
     /* === Ajustes de ancho: E-Mail largo y Teléfono compacto === */
-    #tblSolicitante{
-      table-layout: fixed;        /* clave para que el colgroup fije anchos */
-    }
-    #tblSolicitante th, 
-    #tblSolicitante td{
-      white-space: normal;
-      word-break: break-word;
-    }
-    #tblSolicitante td:nth-child(4) input{
-      max-width: 35mm;
-    }
-    #tblSolicitante input[type="number"][inputmode="numeric"]{
-      max-width: 35mm;
-    }
+    #tblSolicitante{table-layout: fixed;}
+    #tblSolicitante th, #tblSolicitante td{white-space: normal;word-break: break-word;}
+    #tblSolicitante td:nth-child(4) input{max-width: 35mm;}
+    #tblSolicitante input[type="number"][inputmode="numeric"]{max-width: 35mm;}
   </style>
 </head>
 <body>
@@ -129,7 +120,7 @@
         <table class="grid">
           <tr>
             <th>Fecha de Solicitud</th>
-            <td><input type="date" placeholder="dd/mm/aaaa"></td>
+            <td><input id="fechaSolicitud" type="date" placeholder="dd/mm/aaaa" required></td>
             <th>Referido a CCOO</th>
             <td><input class="input-line" type="text" placeholder="NO-AAAA-xxxxx-GCABA-XX"></td>
           </tr>
@@ -140,10 +131,10 @@
         <div class="bar"><div class="bar-label">DATOS DEL SOLICITANTE</div><div class="bar-fill"></div></div>
         <table id="tblSolicitante" class="grid">
           <colgroup>
-            <col style="width:16%">  <!-- TH etiquetas -->
-            <col style="width:50%">  <!-- E-Mail (ancho) -->
-            <col style="width:16%">  <!-- TH Teléfono / Interno -->
-            <col style="width:14%">  <!-- Campo Teléfono -->
+            <col style="width:16%">
+            <col style="width:50%">
+            <col style="width:16%">
+            <col style="width:14%">
           </colgroup>
           <tr>
             <th><span class="req">Apellido y Nombre</span></th>
@@ -187,13 +178,21 @@
           <tr>
             <th>E-Mail/Oficial</th>
             <td>
-              <input id="emailSolic" class="input-line" type="email"
-                     placeholder="Caso de no tener correo oficial/Solicitarlo"
-                     pattern="^[a-zA-Z0-9._%+-]+@(buenosaires\.gob\.ar|policiadelaciudad\.gob\.ar|seguridadciudad\.gob\.ar)$"
-                     title="Debe usar @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar">
+             <!-- E-Mail del SOLICITANTE -->
+              <input id="emailSolic" class="input-line" type="email" required data-mail-inst
+              placeholder="Caso de no tener correo oficial/Solicitarlo"
+              pattern="^[a-zA-Z0-9._%+-]+@(buenosaires\.gob\.ar|policiadelaciudad\.gob\.ar|seguridadciudad\.gob\.ar)$"
+              title="Debe usar @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar">
+
+
             </td>
             <th>Teléfono / Interno</th>
-            <td><input class="input-line" type="number" inputmode="numeric" maxlength="15" pattern="\d{1,15}"></td>
+            <td>
+              <input id="telSolic" class="input-line" type="text" inputmode="numeric" autocomplete="tel"
+              maxlength="10" pattern="^\d{10}$" title="Ingrese exactamente 10 dígitos"
+              oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)">
+            </td>
+
           </tr>
         </table>
       </div>
@@ -212,7 +211,8 @@
             </div>
             <div class="details-box">
               <label for="txOtros">Detalles adicionales</label>
-              <textarea id="txOtros" rows="6" placeholder="Describa sistemas/servidores adicionales a requerir"></textarea>
+              <!-- Arranca deshabilitado; se habilita al tildar "Otros" -->
+              <textarea id="txOtros" rows="6" placeholder="Describa sistemas/servidores adicionales a requerir" disabled></textarea>
             </div>
           </div>
         </div>
@@ -221,18 +221,39 @@
       <div class="bar-box">
         <div class="bar"><div class="bar-label">RESPONSABLE DE LA DEPENDENCIA</div><div class="bar-fill"></div></div>
         <table class="grid">
-          <tr><th>Apellido y Nombre</th><td colspan="3"><input class="input-line" type="text"></td></tr>
-          <tr><th>Cargo</th><td><input class="input-line" type="text"></td><th>LP</th><td><input class="input-line" type="text"></td></tr>
-          <tr><th>División / Departamento</th><td colspan="3"><input class="input-line" type="text"></td></tr>
           <tr>
-            <th>E-Mail/oficial</th>
+            <th><span class="req">Apellido y Nombre</span></th>
+            <td colspan="3">
+              <input id="respNombre" class="input-line" type="text" required
+                     pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s']+$"
+                     title="Ingrese solo letras y espacios">
+            </td>
+          </tr>
+          <tr>
+            <th><span class="req">Cargo</span></th>
+            <td><input id="respCargo" class="input-line" type="text" required></td>
+            <th><span class="req">LP</span></th>
+            <td><input id="respLP" class="input-line" type="text" inputmode="numeric" required></td>
+          </tr>
+          <tr>
+            <th><span class="req">División / Departamento</span></th>
+            <td colspan="3"><input id="respDivision" class="input-line" type="text" required></td>
+          </tr>
+          <tr>
+            <th>E-Mail/Oficial</th>
             <td>
-              <input id="emailResp" class="input-line" type="email"
-                     pattern="^[a-zA-Z0-9._%+-]+@(buenosaires\.gob\.ar|policiadelaciudad\.gob\.ar|seguridadciudad\.gob\.ar)$"
-                     title="Debe usar @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar">
+              <input id="emailResp" class="input-line" type="email" required data-mail-inst
+              pattern="^[a-zA-Z0-9._%+-]+@(buenosaires\.gob\.ar|policiadelaciudad\.gob\.ar|seguridadciudad\.gob\.ar)$"
+              title="Debe usar @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar">
+
             </td>
             <th>Teléfono / Interno</th>
-            <td><input class="input-line" type="number" inputmode="numeric" maxlength="11" pattern="\d{1,11}"></td>
+            <td>
+              <input id="telSolic" class="input-line" type="text" inputmode="numeric" autocomplete="tel"
+              maxlength="10" pattern="^\d{10}$" title="Ingrese exactamente 10 dígitos"
+              oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)">
+            </td>
+
           </tr>
         </table>
       </div>
@@ -300,70 +321,128 @@
 
   // ====== VALIDACIÓN DE DOMINIOS DE E-MAIL ======
   const allowedDomains = new Set([
-    "buenosaires.gob.ar",
-    "policiadelaciudad.gob.ar",
-    "seguridadciudad.gob.ar"
-  ]);
-  function isAllowedEmail(email) {
-    if (!email) return false;
-    const at = email.indexOf("@");
-    if (at === -1) return false;
-    const domain = email.slice(at + 1).toLowerCase().trim();
-    return allowedDomains.has(domain);
-  }
-  function attachLiveEmailValidation(el) {
-    if (!el) return;
-    el.addEventListener("input", function () {
-      const v = el.value.trim();
-      if (v && !isAllowedEmail(v)) {
-        el.setCustomValidity("El correo debe ser institucional: @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar");
-      } else {
-        el.setCustomValidity("");
-      }
-    });
-  }
+  "buenosaires.gob.ar",
+  "policiadelaciudad.gob.ar",
+  "seguridadciudad.gob.ar"
+]);
+
+function isAllowedEmail(email){
+  if(!email) return false;
+  const at = email.indexOf("@");
+  if (at === -1) return false;
+  const domain = email.slice(at+1).toLowerCase().trim();
+  return allowedDomains.has(domain);
+}
+
+function attachLiveEmailValidation(el){
+  if(!el) return;
+  el.addEventListener("input", () => {
+    const v = el.value.trim();
+    if (v && !isAllowedEmail(v)) {
+      el.setCustomValidity("El correo debe ser institucional: @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar");
+    } else {
+      el.setCustomValidity("");
+    }
+  });
+}
+
+// Aplica a todos los e-mails institucionales (solicitante y responsable)
+const emailInputs = Array.from(document.querySelectorAll('input[type="email"][data-mail-inst]'));
+emailInputs.forEach(attachLiveEmailValidation);
+
   const emailSolic = document.getElementById('emailSolic');
   const emailResp  = document.getElementById('emailResp');
   attachLiveEmailValidation(emailSolic);
   attachLiveEmailValidation(emailResp);
 
-  function validarRequeridos(){
-    let ok = true;
-    ['inpNombre','inpCuil','inpCalle','inpNumero'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(!el) return;
-      el.classList.remove('invalid');
-      if(!el.checkValidity()){
-        el.classList.add('invalid');
-        if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity(); el.focus(); }
-        ok = false;
-      }
-    });
-
-    const cbOtros = document.getElementById('cbOtros');
-    const txOtros = document.getElementById('txOtros');
-    if(cbOtros && cbOtros.checked && txOtros && !txOtros.value.trim()){
-      txOtros.classList.add('invalid');
-      txOtros.scrollIntoView({behavior:'smooth',block:'center'});
-      ok = false;
-    }else if(txOtros){ txOtros.classList.remove('invalid'); }
-
-    [emailSolic, emailResp].forEach(el=>{
-      if (!el) return;
-      el.classList.remove('invalid');
-      const v = el.value.trim();
-      if (v && !isAllowedEmail(v)) {
-        el.setCustomValidity("El correo debe ser institucional: @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar");
-        el.classList.add('invalid');
-        if (ok) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity(); el.focus(); }
-        ok = false;
-      } else {
-        el.setCustomValidity("");
-      }
-    });
-
-    return ok;
+  // ====== “Otros” solo editable si está tildado ======
+  const cbOtros = document.getElementById('cbOtros');
+  const txOtros = document.getElementById('txOtros');
+  function syncOtros(){
+    if (!cbOtros || !txOtros) return;
+    txOtros.disabled = !cbOtros.checked;
+    if (txOtros.disabled){
+      txOtros.classList.remove('invalid');
+      txOtros.value = '';
+    }
   }
+  if (cbOtros) {
+    cbOtros.addEventListener('change', syncOtros);
+    syncOtros(); // estado inicial
+  }
+
+function validarRequeridos(){
+  let ok = true;
+
+  // === Campos del solicitante (obligatorios) ===
+  ['inpNombre','inpCuil','inpCalle','inpNumero','fechaSolicitud'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.remove('invalid');
+    if(!el.checkValidity()){
+      el.classList.add('invalid');
+      if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity?.(); el.focus(); }
+      ok = false;
+    }
+  });
+
+  // === “Otros” requiere detalle ===
+  if(cbOtros && cbOtros.checked && txOtros && !txOtros.value.trim()){
+    txOtros.classList.add('invalid');
+    txOtros.scrollIntoView({behavior:'smooth',block:'center'});
+    ok = false;
+  } else if (txOtros){
+    txOtros.classList.remove('invalid');
+  }
+
+  // === E-mails institucionales (Solicitante y Responsable) ===
+  // Toma cualquier input email marcado con data-mail-inst, más #emailSolic/#emailResp por compatibilidad
+  const emailNodeList = document.querySelectorAll(
+    'input[type="email"][data-mail-inst], #emailSolic, #emailResp'
+  );
+  const emailInputs = Array.from(new Set(emailNodeList)); // dedup
+
+  emailInputs.forEach(el=>{
+    if(!el) return;
+    el.classList.remove('invalid');
+    const v = (el.value || '').trim();
+
+    // si es required y está vacío -> error
+    if (el.required && !v){
+      el.setCustomValidity("Complete el e-mail institucional.");
+      el.classList.add('invalid');
+      if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity?.(); el.focus(); }
+      ok = false;
+      return;
+    }
+
+    // si hay valor y no es institucional -> error
+    if (v && !isAllowedEmail(v)){
+      el.setCustomValidity("El correo debe ser institucional: @buenosaires.gob.ar, @policiadelaciudad.gob.ar o @seguridadciudad.gob.ar");
+      el.classList.add('invalid');
+      if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity?.(); el.focus(); }
+      ok = false;
+    } else {
+      el.setCustomValidity("");
+    }
+  });
+
+  // === Campos del RESPONSABLE (obligatorios, e-mail ya validado arriba) ===
+  ['respNombre','respCargo','respLP','respDivision','respTel'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.remove('invalid');
+    if(!el.checkValidity() || !String(el.value||'').trim()){
+      el.classList.add('invalid');
+      if(ok){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.reportValidity?.(); el.focus(); }
+      ok = false;
+    }
+  });
+
+  return ok;
+}
+
+
 
   // Carga un script si no existe (para jsPDF cuando el bundle no lo expone)
   function loadScript(src){
@@ -442,7 +521,7 @@
     try { await document.fonts.ready; } catch(_) {}
 
     if(!validarRequeridos()){
-      alert('Por favor complete los campos obligatorios o corrija los e-mails institucionales.');
+      alert('Por favor complete los campos obligatorios, los datos del Responsable y/o corrija los e-mails institucionales.');
       return;
     }
 
@@ -479,6 +558,9 @@
       if (el.type==='checkbox' || el.type==='radio') el.checked=false; else el.value='';
       if (typeof el.setCustomValidity === 'function') el.setCustomValidity('');
     });
+    // Reiniciar “Otros”
+    if (cbOtros) cbOtros.checked = false;
+    syncOtros();
     setTodayIfEmpty();
   });
 </script>
